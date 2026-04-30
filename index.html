@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aman Sales AI | Puter Edition</title>
 <script src="https://js.puter.com/v2/"></script>
+});
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -229,12 +230,12 @@ td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-a
         <div class="setup-card">
           <div class="setup-card-title">👤 Step 3 — Sender Details (Signature)</div>
           <div class="g2">
-            <div class="field"><span class="lbl">Your Name</span><input class="inp" id="s-sname" placeholder="Aman Chaudhary" /></div>
-            <div class="field"><span class="lbl">Designation</span><input class="inp" id="s-desig" placeholder="E-Learning Manager" /></div>
+            <div class="field"><span class="lbl">Your Name</span><input class="inp" id="s-sname" placeholder="Aman Sharma" /></div>
+            <div class="field"><span class="lbl">Designation</span><input class="inp" id="s-desig" placeholder="Sales Manager" /></div>
           </div>
           <div class="g2">
-            <div class="field"><span class="lbl">Company</span><input class="inp" id="s-comp" placeholder="HappCoach Pvt.Ltd." /></div>
-            <div class="field"><span class="lbl">Number</span><input class="inp" id="s-phone" placeholder="+91 9058183330" /></div>
+            <div class="field"><span class="lbl">Company</span><input class="inp" id="s-comp" placeholder="Aman EduTech" /></div>
+            <div class="field"><span class="lbl">Phone</span><input class="inp" id="s-phone" placeholder="+91 98XXX XXXX" /></div>
           </div>
           <button class="btn-pri" onclick="saveSender()">💾 Save Details</button>
         </div>
@@ -259,7 +260,7 @@ td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-a
         <div id="extractedSection" style="display:none;margin-top:18px">
           <div class="tbl-wrap">
             <table>
-              <thead><tr><th>Name</th><th>HappCoach Pvt.Ltd.</th><th>Email</th><th>Role</th><th>AI Reason</th><th>Action</th></tr></thead>
+              <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Role</th><th>AI Reason</th><th>Action</th></tr></thead>
               <tbody id="extractedTbody"></tbody>
             </table>
           </div>
@@ -325,7 +326,7 @@ td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-a
 </div>
 
 <script>
-let cfg = { senderName:'', desig:'', HappCoach Pvt.Ltd.:'', phone:'', gasUrl:'' };
+let cfg = { senderName:'', desig:'', company:'', phone:'', gasUrl:'' };
 let leads = [];
 let campaign = [];
 let nextId = 1;
@@ -396,7 +397,7 @@ async function testEmail() {
 async function sendMail(to, name, sub, body) {
   const url = cfg.gasUrl || localStorage.getItem('aman_gas_url');
   if(!url) throw new Error('Setup Google Apps Script URL first');
-  const signature = `\n\n---\n${cfg.senderName}\n${cfg.desig} | ${cfg.HappCoach Pvt.Ltd.}`;
+  const signature = `\n\n---\n${cfg.senderName}\n${cfg.desig} | ${cfg.company}`;
   const payload = { to, name, subject: sub, body: body + signature };
   return fetch(url, { method: 'POST', mode: 'no-cors', body: JSON.stringify(payload) });
 }
@@ -404,7 +405,7 @@ async function sendMail(to, name, sub, body) {
 function saveSender() {
     cfg.senderName = gv('s-sname');
     cfg.desig = gv('s-desig');
-    cfg.HappCoach Pvt.Ltd. = gv('s-comp');
+    cfg.company = gv('s-comp');
     alert('Details Saved!');
 }
 
@@ -431,7 +432,7 @@ async function extractLeads() {
         const reason = await ai(`In 10 words, why should someone in this role: ${rowText} take a course on ${course}?`);
         extractedLeads.push({
             name: r.name || r.Name || 'Prospect',
-            HappCoach Pvt.Ltd.: r.HappCoach Pvt.Ltd. || r.HappCoach Pvt.Ltd. || 'Organization',
+            company: r.company || r.Company || 'Organization',
             email: Object.values(r).find(v => String(v).includes('@')),
             role: r.role || r.Role || 'Professional',
             reason: reason
@@ -446,7 +447,7 @@ function renderExtracted() {
     $('extractedTbody').innerHTML = extractedLeads.map((l, i) => `
         <tr>
             <td>${l.name}</td>
-            <td>${l.HappCoach Pvt.Ltd.}</td>
+            <td>${l.company}</td>
             <td style="color:var(--c1)">${l.email}</td>
             <td>${l.role}</td>
             <td style="font-size:10px">${l.reason}</td>
@@ -487,8 +488,8 @@ async function sendAllEmails() {
     $('sendAllBtn').disabled = true;
     for(let l of campaign) {
         if(l.status === 'sent') continue;
-        const body = await ai(`Write a short sales email to ${l.name} at ${l.HappCoach Pvt.Ltd.} about a ${gv('u-course')} course.`);
-        await sendMail(l.email, l.name, `Opportunity for ${l.HappCoach Pvt.Ltd.}`, body);
+        const body = await ai(`Write a short sales email to ${l.name} at ${l.company} about a ${gv('u-course')} course.`);
+        await sendMail(l.email, l.name, `Opportunity for ${l.company}`, body);
         l.status = 'sent';
         renderCampaign();
     }

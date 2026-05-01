@@ -212,6 +212,7 @@ code{font-size:11px;background:var(--bg4);padding:2px 7px;border-radius:4px;colo
       <div class="tab"    id="tab-compose"  onclick="sw('compose')">✉️ Compose</div>
       <div class="tab"    id="tab-reply"    onclick="sw('reply')">↩️ Reply</div>
       <div class="tab"    id="tab-dash"     onclick="sw('dash')">📊 Dashboard</div>
+      <div class="tab"    id="tab-settings" onclick="sw('settings')">⚙️ Settings</div>
     </div>
 
     <div class="scroll">
@@ -402,6 +403,94 @@ code{font-size:11px;background:var(--bg4);padding:2px 7px;border-radius:4px;colo
         <div id="actFeed"><div class="empty"><div class="empty-ico">📋</div><div>No activity yet.</div></div></div>
       </div>
 
+      <!-- ══ SETTINGS ══ -->
+      <div class="pane" id="pane-settings">
+        <div class="info-box">⚙️ <span>Email bhejne ke liye Google Apps Script ek baar setup karo. AI (GPT-4o-mini) already Puter.js se free mein kaam karta hai.</span></div>
+
+        <!-- GAS SETUP -->
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd2);padding:18px;margin-bottom:14px">
+          <div style="font-family:Syne,sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px">
+            📧 Google Apps Script — Email Sender
+            <span id="gas-badge" style="display:none;font-size:11px;padding:3px 9px;background:var(--g1l);border:1px solid var(--g1b);border-radius:20px;color:var(--g1);font-weight:500">✓ Connected</span>
+          </div>
+          <div style="font-size:12px;color:var(--tx2);margin-bottom:14px;line-height:1.6">Aapki Gmail se emails jaayengi — free, unlimited. Ek baar setup karo.</div>
+
+          <div style="counter-reset:step">
+            <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--b1)">
+              <div style="width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0">1</div>
+              <div style="font-size:12px;color:var(--tx2);line-height:1.6">Jaao → <a href="https://script.google.com" target="_blank" style="color:var(--c1)"><strong>script.google.com</strong></a> → <strong>New Project</strong></div>
+            </div>
+            <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--b1)">
+              <div style="width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0">2</div>
+              <div style="font-size:12px;color:var(--tx2);line-height:1.6"><strong>Ctrl+A → Delete</strong> → neeche diya code copy karo → paste karo → <strong>Ctrl+S</strong> → project name: <code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px;color:var(--g1)">AmanSalesAI</code></div>
+            </div>
+            <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--b1)">
+              <div style="width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0">3</div>
+              <div style="font-size:12px;color:var(--tx2);line-height:1.6"><strong>Deploy → New Deployment</strong> → Type: <code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px;color:var(--g1)">Web App</code> → Execute as: <code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px;color:var(--g1)">Me</code> → Who has access: <code style="font-size:11px;background:var(--bg4);padding:2px 6px;border-radius:4px;color:var(--g1)">Anyone</code> → Deploy</div>
+            </div>
+            <div style="display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--b1)">
+              <div style="width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0">4</div>
+              <div style="font-size:12px;color:var(--tx2);line-height:1.6">Permission popup → <strong>Authorize → Google account → Advanced → Allow</strong></div>
+            </div>
+            <div style="display:flex;gap:12px;padding:9px 0">
+              <div style="width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0">5</div>
+              <div style="font-size:12px;color:var(--tx2);line-height:1.6">Web App <strong>URL copy</strong> karo → neeche paste karo → Save</div>
+            </div>
+          </div>
+
+          <!-- GAS CODE -->
+          <div style="background:var(--bg4);border:1px solid var(--b2);border-radius:var(--rd);padding:12px;margin:12px 0">
+            <div style="font-size:10px;color:var(--tx3);margin-bottom:8px;text-transform:uppercase;letter-spacing:.8px">Google Apps Script Code</div>
+            <pre id="gasCodeBlock" style="font-size:11px;color:var(--g1);line-height:1.75;white-space:pre-wrap;font-family:monospace">function doPost(e) {
+  try {
+    var d = JSON.parse(e.postData.contents);
+    MailApp.sendEmail({
+      to:      d.to,
+      subject: d.subject,
+      body:    d.body,
+      name:    "Aman Sales AI"
+    });
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:true}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ok:false,err:err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+            <button class="btn-sm" onclick="copyGasCode()" style="margin-top:8px">📋 Code Copy Karo</button>
+          </div>
+
+          <div style="background:var(--a1l);border:1px solid rgba(245,158,11,.25);border-radius:var(--rd);padding:10px 13px;font-size:12px;color:var(--a1);margin-bottom:12px;line-height:1.6">
+            ⚠️ "Google hasn't verified this app" aaye toh → <strong>Advanced → Go to AmanSalesAI → Allow</strong>. Yeh aapka khud ka script hai.
+          </div>
+
+          <div class="field"><span class="lbl">Web App URL</span>
+            <input class="inp" id="gas-url-inp" placeholder="https://script.google.com/macros/s/.../exec" />
+          </div>
+          <div class="g2" style="gap:10px">
+            <button class="btn btn-blue" onclick="saveGasUrl()">💾 Save & Connect</button>
+            <button class="btn btn-ghost" onclick="testGasEmail()" style="border-color:var(--g1);color:var(--g1)">📨 Test Email</button>
+          </div>
+        </div>
+
+        <!-- SENDER INFO -->
+        <div style="background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd2);padding:18px">
+          <div style="font-family:Syne,sans-serif;font-size:14px;font-weight:700;margin-bottom:4px">👤 Sender Info (Signature)</div>
+          <div style="font-size:12px;color:var(--tx2);margin-bottom:14px">Har email mein yeh signature aayega.</div>
+          <div class="g2">
+            <div class="field"><span class="lbl">Aapka Naam</span><input class="inp" id="sig-name" placeholder="Aman Sharma" /></div>
+            <div class="field"><span class="lbl">Designation</span><input class="inp" id="sig-desig" placeholder="Sales Manager" /></div>
+          </div>
+          <div class="g2">
+            <div class="field"><span class="lbl">Company</span><input class="inp" id="sig-comp" placeholder="Aman EduTech Pvt Ltd" /></div>
+            <div class="field"><span class="lbl">Phone</span><input class="inp" id="sig-phone" placeholder="+91 98765 43210" /></div>
+          </div>
+          <button class="btn btn-blue" onclick="saveSenderInfo()">💾 Save Signature</button>
+        </div>
+      </div>
+
     </div><!-- /scroll -->
   </div><!-- /main -->
 </div><!-- /app -->
@@ -508,12 +597,17 @@ function refreshDash() {
 }
 
 // ════════════════════════════════════════
-//  PUTER AI — gemini-1.5-flash via puter.ai
+//  PUTER AI — gpt-4o-mini (free, no key needed)
 // ════════════════════════════════════════
 async function ai(prompt) {
   try {
-    const resp = await puter.ai.chat(prompt, { model: 'gemini-1.5-flash' });
-    return (typeof resp === 'string') ? resp : (resp?.message?.content || resp?.text || JSON.stringify(resp));
+    const resp = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
+    // Puter returns different shapes — handle all
+    if(typeof resp === 'string') return resp;
+    if(resp?.message?.content) return resp.message.content;
+    if(resp?.text) return resp.text;
+    if(resp?.choices?.[0]?.message?.content) return resp.choices[0].message.content;
+    return JSON.stringify(resp);
   } catch(e) {
     throw new Error('AI Error: ' + e.message);
   }
@@ -548,13 +642,28 @@ function sigBlock() {
 }
 
 // ════════════════════════════════════════
-//  PUTER MAIL — send email
+//  EMAIL VIA GOOGLE APPS SCRIPT
+//  text/plain POST = no CORS preflight needed
 // ════════════════════════════════════════
 async function sendMail(to, subject, body) {
-  if(!to || !to.includes('@')) throw new Error('Invalid email: ' + to);
+  if(!to || !to.includes('@')) throw new Error('Invalid email address: ' + to);
+  const gasUrl = localStorage.getItem('aman_gas_url') || '';
+  if(!gasUrl) throw new Error('GAS URL not set. Go to ⚙️ Settings tab and set up Google Apps Script.');
   const full = body + '\n\n---\n' + sigBlock();
-  // puter.mail.send is the standard Puter email API
-  await puter.mail.send({ to, subject, body: full });
+  const payload = JSON.stringify({ to, subject, body: full });
+  const resp = await fetch(gasUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain' },
+    body: payload
+  });
+  const text = await resp.text().catch(()=>'');
+  if(text) {
+    try {
+      const json = JSON.parse(text);
+      if(json.ok === false) throw new Error('GAS Error: ' + (json.err||'unknown'));
+    } catch(_){}
+  }
+  return true;
 }
 
 // ════════════════════════════════════════
@@ -996,8 +1105,80 @@ async function replySend() {
 }
 
 // ════════════════════════════════════════
+//  SETTINGS FUNCTIONS
+// ════════════════════════════════════════
+function saveGasUrl() {
+  const url = document.getElementById('gas-url-inp').value.trim();
+  if(!url || !url.includes('script.google.com')) {
+    alert('Valid GAS URL daalo (https://script.google.com/... se shuruat)');
+    return;
+  }
+  localStorage.setItem('aman_gas_url', url);
+  document.getElementById('gas-badge').style.display = 'inline-flex';
+  log('Google Apps Script connected ✅', '📧');
+  alert('✅ GAS URL saved! Ab Test Email se verify karo.');
+}
+
+function copyGasCode() {
+  const code = document.getElementById('gasCodeBlock')?.textContent || '';
+  navigator.clipboard.writeText(code).then(()=>alert('✅ Code copied! script.google.com mein paste karo.'));
+}
+
+async function testGasEmail() {
+  const to = prompt('Apna email address (test ke liye):', '');
+  if(!to) return;
+  try {
+    await sendMail(to, 'Aman Sales AI — Connection Test ✅', 'Email sending is working! Your Aman Sales AI is ready.');
+    alert('✅ Test email sent!
+
+Inbox check karo (Spam bhi dekho).');
+  } catch(e) {
+    alert('❌ Failed: ' + e.message + '
+
+Fix:
+1. GAS script redeploy karo (New Version)
+2. Permission Allow karo
+3. URL sahi check karo');
+  }
+}
+
+function saveSenderInfo() {
+  localStorage.setItem('aman_sname', document.getElementById('sig-name').value || 'Aman Sharma');
+  localStorage.setItem('aman_desig', document.getElementById('sig-desig').value || 'Sales Manager');
+  localStorage.setItem('aman_comp',  document.getElementById('sig-comp').value  || 'Aman EduTech');
+  localStorage.setItem('aman_phone', document.getElementById('sig-phone').value || '');
+  log('Sender info saved', '👤');
+  alert('✅ Signature saved!');
+}
+
+function sigBlock() {
+  const name  = localStorage.getItem('aman_sname') || 'Aman Sharma';
+  const desig = localStorage.getItem('aman_desig') || 'Sales Manager';
+  const comp  = localStorage.getItem('aman_comp')  || 'Aman EduTech';
+  const phone = localStorage.getItem('aman_phone') || '';
+  return `${name}
+${desig} | ${comp}${phone?'
+Ph: '+phone:''}`;
+}
+
+// ════════════════════════════════════════
 //  INIT
 // ════════════════════════════════════════
+// Load saved GAS URL
+const savedGas = localStorage.getItem('aman_gas_url');
+if(savedGas) {
+  const inp = document.getElementById('gas-url-inp');
+  if(inp) inp.value = savedGas;
+  const badge = document.getElementById('gas-badge');
+  if(badge) badge.style.display = 'inline-flex';
+}
+// Load sender info
+const si = { name: localStorage.getItem('aman_sname'), desig: localStorage.getItem('aman_desig'), comp: localStorage.getItem('aman_comp'), phone: localStorage.getItem('aman_phone') };
+if(si.name)  { const e=document.getElementById('sig-name');  if(e) e.value=si.name; }
+if(si.desig) { const e=document.getElementById('sig-desig'); if(e) e.value=si.desig; }
+if(si.comp)  { const e=document.getElementById('sig-comp');  if(e) e.value=si.comp; }
+if(si.phone) { const e=document.getElementById('sig-phone'); if(e) e.value=si.phone; }
+
 renderLeads();
 </script>
 </body>

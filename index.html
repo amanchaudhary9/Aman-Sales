@@ -733,73 +733,121 @@ function processFile(file) {
 
 async function extractLeads() {
   const course   = gv('u-course');
-  const audience = gv('u-audience');
-  if(!course)          { alert('Course naam likho pehle!'); return; }
-  if(!rawData.length)  { alert('Pehle file upload karo.'); return; }
+  if(!course)         { alert('Apna Course naam likho pehle!'); return; }
+  if(!rawData.length) { alert('Pehle file upload karo.'); return; }
 
-  const btn=$('extractBtn');
-  btn.disabled=true; btn.textContent='🔍 Detecting columns...';
+  const btn = $('extractBtn');
+  btn.disabled = true;
+  btn.textContent = '🔍 Reading file...';
 
-  // Smart column detection
-  const keys = Object.keys(rawData[0]||{});
-  let emailCol='',nameCol='',companyCol='',roleCol='',notesCol='';
+  try {
+    const keys = Object.keys(rawData[0] || {});
+    let emailCol='', nameCol='', companyCol='', roleCol='';
 
-  for(const key of keys) {
-    if(!emailCol && rawData.some(r=>String(r[key]||'').includes('@'))) emailCol=key;
-  }
-  for(const key of keys) {
-    const k=key.toLowerCase().replace(/[^a-z]/g,'');
-    if(!nameCol    && ['name','fullname','contactname','person','contact'].includes(k)) nameCol=key;
-    if(!companyCol && ['company','organization','org','firm','business','institute','institution','employer','college','school','university'].includes(k)) companyCol=key;
-    if(!roleCol    && ['designation','role','title','jobtitle','position','department'].includes(k)) roleCol=key;
-    if(!notesCol   && ['notes','note','remarks','comment','description'].includes(k)) notesCol=key;
-  }
-  if(!nameCol    && keys[0]) nameCol=keys[0];
-  if(!companyCol && keys[1]) companyCol=keys[1];
-  if(!emailCol   && keys[2]) emailCol=keys[2];
-  if(!roleCol    && keys[3]) roleCol=keys[3];
-
-  if(!emailCol) {
-    alert('Email column nahi mili!\nFile mein "@" wali emails check karo.');
-    btn.disabled=false; btn.textContent='🤖 AI Extract Leads'; return;
-  }
-
-  const valid = rawData.map(row=>({
-    name:    String(row[nameCol]   ||'').trim(),
-    company: String(row[companyCol]||'').trim(),
-    email:   String(row[emailCol]  ||'').trim(),
-    role:    String(row[roleCol]   ||'').trim(),
-    notes:   String(row[notesCol]  ||'').trim(),
-  })).filter(r=>r.email.includes('@')&&r.email.includes('.'));
-
-  if(!valid.length) {
-    alert('Koi valid email nahi mili!');
-    btn.disabled=false; btn.textContent='🤖 AI Extract Leads'; return;
-  }
-
-  btn.textContent=`✅ ${valid.length} emails mili — AI reasons likh raha hai...`;
-  extractedLeads=[];
-  const BATCH=20;
-
-  for(let i=0;i<valid.length;i+=BATCH) {
-    const batch=valid.slice(i,i+BATCH);
-    btn.textContent=`🤖 Processing ${i+1}–${Math.min(i+BATCH,valid.length)} / ${valid.length}...`;
-    const prompt=`For each person, write 1 short sentence (max 10 words) why they need: "${course}"\n${batch.map((r,j)=>`${j+1}. ${r.name}|${r.role}|${r.company}`).join('\n')}\nReturn ONLY JSON array of strings: ["reason1","reason2"]. No markdown.`;
-    try {
-      const res=await ai(prompt);
-      const s=res.indexOf('['),e2=res.lastIndexOf(']');
-      let reasons=[];
-      if(s!==-1&&e2!==-1){try{reasons=JSON.parse(res.slice(s,e2+1));}catch(_){}}
-      batch.forEach((r,j)=>extractedLeads.push({...r,reason:reasons[j]||`${r.role||'Professional'} needs ${course}`}));
-    } catch(_) {
-      batch.forEach(r=>extractedLeads.push({...r,reason:`${r.role||'Professional'} needs ${course}`}));
+    // Step 1: find email column (has @ in values)
+    for(const key of keys) {
+      if(!emailCol) {
+        const hasEmail = rawData.slice(0,20).some(r => {
+          const v = String(r[key]||'').trim();
+          return v.includes('@') && v.includes('.');
+        });
+        if(hasEmail) emailCol = key;
+      }
     }
+
+    // Step 2: match other columns by header name
+    for(const key of keys) {
+      const k = key.toLowerCase().replace(/[\s_\-\.]/g,'');
+      if(!nameCol    && /^(name|fullname|contactname|person|contact|fname|lname)$/.test(k)) nameCol=key;
+      if(!companyCol && /^(company|organization|org|firm|business|institute|institution|employer|college|school|university|companyname|orgname)$/.test(k)) companyCol=key;
+      if(!roleCol    && /^(designation|role|title|jobtitle|position|department|dept)$/.test(k)) roleCol=key;
+    }
+
+    // Step 3: positional fallback
+    if(!nameCol    && keys[0]) nameCol    = keys[0];
+    if(!companyCol && keys[1]) companyCol = keys[1];
+    if(!emailCol   && keys[2]) emailCol   = keys[2];
+    if(!roleCol    && keys[3]) roleCol    = keys[3];
+
+    // Debug info
+    console.log('Columns detected:', {nameCol, companyCol, emailCol, roleCol});
+    console.log('Sample row:', rawData[0]);
+
+    if(!emailCol) {
+      const colNames = keys.join(', ');
+      alert('Email column nahi mili!
+
+File mein yeh columns hain:
+' + colNames + '
+
+Koi column mein "@" wali email honi chahiye.');
+      btn.disabled=false; btn.textContent='🤖 AI Extract Leads';
+      return;
+    }
+
+    btn.textContent = '📋 Extracting leads...';
+
+    // Step 4: extract all rows with valid email
+    extractedLeads = rawData
+      .map((row, i) => ({
+        name:    String(row[nameCol]    || row[keys[0]] || '').trim(),
+        company: String(row[companyCol] || row[keys[1]] || '').trim(),
+        email:   String(row[emailCol]   || '').trim(),
+        role:    String(row[roleCol]    || '').trim(),
+        reason:  `${String(row[roleCol]||'').trim()||'Professional'} at ${String(row[companyCol]||'').trim()||'company'} — relevant for ${course}`,
+      }))
+      .filter(r => {
+        const e = r.email;
+        return e.length > 3 && e.includes('@') && e.includes('.');
+      });
+
+    if(!extractedLeads.length) {
+      alert('Koi valid email nahi mili!
+
+Check karo:
+- Email column mein data hai?
+- "@" wali emails hain?
+
+File columns: ' + keys.join(', '));
+      btn.disabled=false; btn.textContent='🤖 AI Extract Leads';
+      return;
+    }
+
+    // Step 5: AI writes personalized reasons (optional — continues even if AI fails)
+    btn.textContent = `✅ ${extractedLeads.length} leads found — AI personalizing...`;
+    const BATCH = 15;
+    for(let i = 0; i < extractedLeads.length; i += BATCH) {
+      const batch = extractedLeads.slice(i, i + BATCH);
+      btn.textContent = `🤖 AI: ${i+1}–${Math.min(i+BATCH, extractedLeads.length)} / ${extractedLeads.length}`;
+      try {
+        const prompt = `For each person, write ONE sentence (8-10 words max) explaining why they need: "${course}"
+` +
+          batch.map((r,j) => `${j+1}. ${r.name} | ${r.role} | ${r.company}`).join('
+') +
+          '
+
+Return ONLY a JSON array: ["reason1","reason2",...]. No explanation, no markdown.';
+        const res = await ai(prompt);
+        const s = res.indexOf('['), e2 = res.lastIndexOf(']');
+        if(s !== -1 && e2 !== -1) {
+          const reasons = JSON.parse(res.slice(s, e2+1));
+          batch.forEach((r, j) => { if(reasons[j]) r.reason = reasons[j]; });
+        }
+      } catch(_) { /* AI failed — keep default reason, continue */ }
+    }
+
+    renderExtracted();
+    log(`${extractedLeads.length} leads extracted from file`, '🤖');
+
+  } catch(err) {
+    alert('Extract error: ' + err.message);
+    console.error(err);
   }
 
-  renderExtracted();
-  log(`${extractedLeads.length} leads extracted`,'🤖');
-  btn.disabled=false; btn.textContent='🤖 AI Extract Leads';
+  btn.disabled = false;
+  btn.textContent = '🤖 AI Extract Leads';
 }
+
 
 function renderExtracted() {
   $('extractedSection').style.display='block';

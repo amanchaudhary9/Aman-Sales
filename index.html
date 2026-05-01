@@ -1136,7 +1136,7 @@ async function doComposeGen(){
     +'Context: '+(ctx||'none')+'\n\n'
     +'Format EXACTLY:\n'
     +'SUBJECT: [subject line]\n'
-    +'---\n'
+    +'\n'
     +'[email body]\n\n'
     +'Rules: 160-200 words. Personalized opener. Clear value proposition. Soft CTA (15-min discovery call or free demo). Sign as:\n'+getSig()+'\nNo bracket placeholders.';
   try {
@@ -1191,7 +1191,7 @@ async function doReplyGen(){
     +'Constraints: '+(cons||'standard terms')+'\n\n'
     +'Format EXACTLY:\n'
     +'SUBJECT: [Re: subject]\n'
-    +'---\n'
+    +'\n'
     +'[reply body]\n\n'
     +'Rules: 140-180 words. Address their exact concern directly. Empathetic but confident. Clear next step. Sign as:\n'+getSig()+'\nNo bracket placeholders.';
   try {

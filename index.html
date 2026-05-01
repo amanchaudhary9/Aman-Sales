@@ -225,7 +225,7 @@ code{font-size:11px;background:var(--s3);padding:2px 6px;border-radius:4px;color
 
       <!-- ████ UPLOAD & EXTRACT ████ -->
       <div class="pane on" id="PANE-upload">
-        <div class="box box-b">📂 <span>CSV ya Excel upload karo. AI leads extract karega name, email, company aur role ke saath.</span></div>
+        <div class="box box-b">📂 <span>Upload the CSV or Excel File.</span></div>
 
         <div class="dropzone" id="dropzone"
           onclick="document.getElementById('fileInput').click()"
@@ -351,7 +351,7 @@ code{font-size:11px;background:var(--s3);padding:2px 6px;border-radius:4px;color
       <!-- ████ REPLY ████ -->
       <div class="pane" id="PANE-reply">
         <div class="fld"><span class="lbl">Paste Incoming Email Here</span>
-          <textarea class="inp" id="r-in" rows="5" placeholder="Client ne jo email bheja hai woh yahan paste karo..."></textarea>
+          <textarea class="inp" id="r-in" rows="5" placeholder="Please paste the email sent by the client here..."></textarea>
         </div>
         <div class="fld">
           <div class="g2">
@@ -792,8 +792,8 @@ function processFile(file){
 
 function runExtract(){
   var course = gv('uc-course');
-  if(!course){ alert('Pehle course naam likho!'); return; }
-  if(!rawFileData.length){ alert('Pehle file upload karo.'); return; }
+  if(!course){ alert('Write the course name!'); return; }
+  if(!rawFileData.length){ alert('Upload the file.'); return; }
 
   var btn = $('extractBtn');
   btn.disabled = true;
@@ -1088,7 +1088,7 @@ async function regenOneLead(id){
 async function sendAll(){
   var ready = campaign.filter(function(c){return c.status==='ready';});
   if(!ready.length){ alert('Koi ready email nahi hai. Pehle Generate All click karo.'); return; }
-  if(!confirm(ready.length+' emails bhejne hain. Confirm?')) return;
+  if(!confirm(ready.length+' Should I go ahead and send the emails. confirm?')) return;
   var btn=$('sendAllBtn');
   btn.disabled=true; btn.textContent='📨 Sending...';
   $('progWrap').style.display='block';
@@ -1123,7 +1123,7 @@ async function sendAll(){
 // ════════════════════════════════════════════════
 async function doComposeGen(){
   var name=gv('co-name'),org=gv('co-org'),email=gv('co-email'),role=gv('co-role'),course=gv('co-course'),ctx=gv('co-ctx');
-  if(!name||!course){ alert('Prospect name aur course naam dono zaroori hain.'); return; }
+  if(!name||!course){ alert('Prospect name and course naam both are mandatory.'); return; }
   var btn=$('coGenBtn'); btn.disabled=true;
   $('coCard').classList.add('on');
   $('coDots').style.display='inline-flex'; $('coLabel').style.display='none';

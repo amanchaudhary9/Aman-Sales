@@ -1018,7 +1018,7 @@ async function generateAll(){
       +'Course/Product: '+course+'\n\n'
       +'Format your response EXACTLY like this:\n'
       +'SUBJECT: [write a compelling subject line here]\n'
-      +'---\n'
+      +'\n'
       +'[write the email body here]\n\n'
       +'Rules:\n'
       +'- 150-180 words\n'
@@ -1076,7 +1076,7 @@ async function regenOneLead(id){
   if(!l) return;
   var course = gv('cc-course')||'our e-learning program';
   l.status='gen'; updateCrowStatus(l);
-  var prompt='Write a personalized B2B sales email.\nProspect: '+(l.name||'Decision Maker')+' | '+(l.role||'')+' | '+(l.company||'')+'\nCourse: '+course+'\n\nFormat EXACTLY:\nSUBJECT: [subject]\n---\n[body]\n\nRules: 150-180 words. Personalized. Sign as:\n'+getSig()+'\nNo bracket placeholders.';
+  var prompt='Write a personalized B2B sales email.\nProspect: '+(l.name||'Decision Maker')+' | '+(l.role||'')+' | '+(l.company||'')+'\nCourse: '+course+'\n\nFormat EXACTLY:\nSUBJECT: [subject]\n\n[body]\n\nRules: 150-180 words. Personalized. Sign as:\n'+getSig()+'\nNo bracket placeholders.';
   try {
     var res = await callAI(prompt);
     var p = parseEmailOutput(res);

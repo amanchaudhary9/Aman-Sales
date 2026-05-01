@@ -632,7 +632,7 @@ async function sendViaGAS(to, subject, body){
   var payload = JSON.stringify({
     to: to,
     subject: subject,
-    body: body + '\n\n---\n' + getSig(),
+    body: body,
     fromName: localStorage.getItem('aman_sig_name') || 'Aman Sales AI'
   });
   var response = await fetch(url, {

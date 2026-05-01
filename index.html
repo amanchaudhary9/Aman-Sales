@@ -3,342 +3,390 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aman Sales AI | Puter Edition</title>
+<title>Aman Sales AI</title>
 <script src="https://js.puter.com/v2/"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#07090f;--bg2:#0d1017;--bg3:#13161f;--bg4:#1a1e2a;--bg5:#202533;
-  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.15);
-  --c1:#4f8ef7;--c1l:rgba(79,142,247,0.12);--c1b:rgba(79,142,247,0.22);
-  --g1:#00d4aa;--g1l:rgba(0,212,170,0.1);
-  --a1:#f59e0b;--a1l:rgba(245,158,11,0.1);
-  --r1:#ef4444;--r1l:rgba(239,68,68,0.08);
-  --p1:#a78bfa;--p1l:rgba(167,139,250,0.1);
-  --tx:#e8ecf5;--tx2:#7a8094;--tx3:#424659;
+  --bg:#07090f;--bg2:#0d1017;--bg3:#13161f;--bg4:#1a1e2a;--bg5:#20253a;
+  --b1:rgba(255,255,255,0.05);--b2:rgba(255,255,255,0.09);--b3:rgba(255,255,255,0.16);
+  --c1:#4f8ef7;--c1l:rgba(79,142,247,0.12);--c1b:rgba(79,142,247,0.28);
+  --g1:#00d4aa;--g1l:rgba(0,212,170,0.10);--g1b:rgba(0,212,170,0.28);
+  --a1:#f59e0b;--a1l:rgba(245,158,11,0.10);
+  --r1:#ef4444;--r1l:rgba(239,68,68,0.10);
+  --p1:#a78bfa;
+  --tx:#e8ecf5;--tx2:#7a8094;--tx3:#40435a;
   --rd:8px;--rd2:12px;--rd3:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);height:100vh;display:flex;flex-direction:column;font-size:13px;overflow:hidden}
-.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0;z-index:50}
+
+/* TOPBAR */
+.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 18px;flex-shrink:0}
 .brand{display:flex;align-items:center;gap:10px}
-.brand-logo{width:30px;height:30px;background:linear-gradient(135deg,#4f8ef7,#7b6ff7);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.brand-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.5px}
+.brand-logo{width:30px;height:30px;background:linear-gradient(135deg,#4f8ef7,#a78bfa);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.brand-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;letter-spacing:-.5px}
 .brand-name span{color:var(--c1)}
-.topbar-pills{display:flex;gap:7px;align-items:center}
-.pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;letter-spacing:0.3px}
-.pill-g{background:var(--g1l);color:var(--g1);border:1px solid rgba(0,212,170,0.2)}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.pill{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px}
+.pill-g{background:var(--g1l);color:var(--g1);border:1px solid var(--g1b)}
 .pill-b{background:var(--c1l);color:var(--c1);border:1px solid var(--c1b)}
+
+/* APP LAYOUT */
 .app{display:flex;flex:1;overflow:hidden}
-.sidebar{width:248px;background:var(--bg2);border-right:1px solid var(--b1);display:flex;flex-direction:column;flex-shrink:0}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--b1);display:flex;flex-direction:column;flex-shrink:0}
 .sb-head{padding:12px;border-bottom:1px solid var(--b1)}
-.sb-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:9px}
-.add-btn{width:100%;padding:8px 11px;background:var(--c1l);border:1px solid var(--c1b);border-radius:var(--rd);color:var(--c1);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;gap:6px;transition:background .13s}
-.add-btn:hover{background:rgba(79,142,247,0.18)}
+.sb-lbl{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px}
+.add-btn{width:100%;padding:7px 11px;background:var(--c1l);border:1px solid var(--c1b);border-radius:var(--rd);color:var(--c1);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:background .13s}
+.add-btn:hover{background:rgba(79,142,247,0.2)}
 .sb-list{flex:1;overflow-y:auto;padding:7px}
 .lead-row{padding:10px 11px;border-radius:var(--rd);cursor:pointer;transition:all .12s;margin-bottom:3px;border:1px solid transparent}
 .lead-row:hover{background:var(--bg3)}
-.lead-row.sel{background:var(--bg3);border-color:rgba(79,142,247,0.25)}
+.lead-row.sel{background:var(--bg3);border-color:var(--c1b)}
+.av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;flex-shrink:0}
 .ln{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lo{font-size:11px;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sdot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+
+/* MAIN */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
-.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--b1);padding:0 14px;gap:1px;flex-shrink:0;overflow-x:auto}
-.tab{padding:12px 15px;font-size:12px;font-weight:500;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap;display:flex;align-items:center;gap:5px}
+.tabs{display:flex;background:var(--bg2);border-bottom:1px solid var(--b1);padding:0 14px;flex-shrink:0;overflow-x:auto}
+.tab{padding:12px 14px;font-size:12px;font-weight:500;color:var(--tx2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .12s;white-space:nowrap}
 .tab:hover{color:var(--tx)}
 .tab.on{color:var(--c1);border-bottom-color:var(--c1)}
 .scroll{flex:1;overflow-y:auto;padding:20px 22px 40px}
 .pane{display:none}
 .pane.on{display:block}
+
+/* FORM */
 .field{margin-bottom:13px}
 .lbl{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--tx3);margin-bottom:6px;display:block}
 .inp{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd);padding:9px 12px;color:var(--tx);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .13s}
-.inp:focus{border-color:rgba(79,142,247,0.4)}
+.inp:focus{border-color:rgba(79,142,247,0.45)}
 .inp::placeholder{color:var(--tx3)}
-textarea.inp{resize:vertical;min-height:72px;line-height:1.55}
+textarea.inp{resize:vertical;line-height:1.6}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-pri{width:100%;padding:11px;background:var(--c1);border:none;border-radius:var(--rd);color:#fff;font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .14s;margin-bottom:10px}
-.btn-pri:hover{background:#5f9bf8;transform:translateY(-1px)}
-.btn-pri:disabled{opacity:.5;cursor:not-allowed;transform:none}
-.btn-ghost{width:100%;padding:9px;background:transparent;border:1px solid var(--b2);border-radius:var(--rd);color:var(--tx2);font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .13s}
-.btn-ghost:hover{background:var(--bg3);color:var(--tx)}
-.btn-green{width:100%;padding:11px;background:var(--g1);border:none;border-radius:var(--rd);color:#000;font-size:13px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .14s}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:4px 12px;border-radius:20px;border:1px solid var(--b2);background:var(--bg3);color:var(--tx2);font-size:11px;cursor:pointer;transition:all .11s;font-family:'Inter',sans-serif}
+.chip.on{background:var(--c1l);border-color:var(--c1b);color:var(--c1)}
+
+/* BUTTONS */
+.btn{width:100%;padding:10px;border:none;border-radius:var(--rd);font-size:13px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .14s}
+.btn-blue{background:var(--c1);color:#fff}
+.btn-blue:hover{background:#6fa0f8;transform:translateY(-1px)}
+.btn-blue:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn-green{background:var(--g1);color:#000;font-weight:700}
 .btn-green:hover{opacity:.88;transform:translateY(-1px)}
 .btn-green:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-amber{padding:8px 16px;background:var(--a1l);border:1px solid rgba(245,158,11,.25);border-radius:var(--rd);color:var(--a1);font-size:12px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;transition:all .13s}
-.btn-amber:disabled{opacity:.4;cursor:not-allowed}
+.btn-ghost{background:transparent;border:1px solid var(--b2);color:var(--tx2)}
+.btn-ghost:hover{background:var(--bg3);color:var(--tx)}
 .btn-sm{padding:5px 11px;border-radius:6px;font-size:11px;font-weight:500;cursor:pointer;font-family:'Inter',sans-serif;border:1px solid var(--b2);background:var(--bg4);color:var(--tx2);transition:all .1s}
+.btn-sm:hover{color:var(--tx);border-color:var(--b3)}
 
-/* OUTPUT BOX */
-.outbox{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd2);padding:16px;margin-top:14px;display:none}
-.outbox.show{display:block}
-.out-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--b1)}
-.out-lbl{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--c1);display:flex;align-items:center;gap:6px}
-.out-badge{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--g1l);color:var(--g1);border:1px solid rgba(0,212,170,.2)}
+/* ── EMAIL EDITOR CARD ── */
+.email-card{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd2);margin-top:14px;overflow:hidden;display:none}
+.email-card.show{display:block}
+.email-card-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--b1);background:var(--bg4)}
+.email-card-title{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--c1);display:flex;align-items:center;gap:8px}
+.email-card-actions{display:flex;gap:8px;align-items:center}
+.email-subject-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--b1);background:var(--bg4)}
+.email-subject-label{font-size:11px;font-weight:600;color:var(--tx3);white-space:nowrap;min-width:52px}
+.email-subject-inp{flex:1;background:transparent;border:none;color:var(--tx);font-size:13px;font-weight:500;font-family:'Inter',sans-serif;outline:none}
+.email-subject-inp::placeholder{color:var(--tx3)}
+.email-body-area{width:100%;background:transparent;border:none;color:var(--tx);font-size:13px;font-family:'Inter',sans-serif;outline:none;resize:none;padding:16px;line-height:1.85;min-height:220px;display:block}
+.email-body-area::placeholder{color:var(--tx3)}
+.email-footer{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--b1);background:var(--bg4)}
+.email-word-count{font-size:11px;color:var(--tx3)}
+.email-send-row{display:flex;gap:8px}
 
-.thinking{display:inline-flex;gap:4px;align-items:center}
+/* DOTS */
+.dots{display:inline-flex;gap:4px;align-items:center}
 .dot{width:5px;height:5px;border-radius:50%;background:var(--c1);animation:blink 1.1s ease-in-out infinite}
 .dot:nth-child(2){animation-delay:.2s}
 .dot:nth-child(3){animation-delay:.4s}
 @keyframes blink{0%,80%,100%{opacity:.2;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
 
-.upload-zone{border:2px dashed var(--b2);border-radius:var(--rd2);padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg3)}
+/* INFO / WARN */
+.info-box{background:var(--c1l);border:1px solid var(--c1b);border-radius:var(--rd);padding:10px 14px;font-size:12px;color:var(--c1);margin-bottom:16px;line-height:1.6}
+.success-box{background:var(--g1l);border:1px solid var(--g1b);border-radius:var(--rd);padding:10px 14px;font-size:12px;color:var(--g1);margin-bottom:14px;line-height:1.6}
+
+/* UPLOAD */
+.upload-zone{border:2px dashed var(--b2);border-radius:var(--rd2);padding:30px 20px;text-align:center;cursor:pointer;transition:all .15s;background:var(--bg3)}
 .upload-zone:hover,.upload-zone.drag{border-color:var(--c1);background:var(--c1l)}
 .upload-zone input{display:none}
-.upload-icon{font-size:32px;margin-bottom:10px}
-.upload-title{font-size:14px;font-weight:600;margin-bottom:5px}
+
+/* TABLE */
 .tbl-wrap{overflow-x:auto;border-radius:var(--rd2);border:1px solid var(--b2);margin-top:14px}
 table{width:100%;border-collapse:collapse;font-size:12px}
 thead tr{background:var(--bg4)}
-th{padding:9px 12px;text-align:left;font-weight:600;color:var(--tx2);font-size:10px;letter-spacing:.7px;text-transform:uppercase;border-bottom:1px solid var(--b2)}
-td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-align:middle}
+th{padding:8px 12px;text-align:left;font-weight:600;color:var(--tx2);font-size:10px;letter-spacing:.7px;text-transform:uppercase;border-bottom:1px solid var(--b2)}
+td{padding:8px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg4)}
 
-/* CAMPAIGN SEND ROW */
-.send-row{padding:12px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rd);margin-bottom:8px}
-.send-row-top{display:flex;align-items:center;gap:10px;margin-bottom:0}
-.send-row-top.has-preview{margin-bottom:10px}
-.send-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;background:var(--c1l);color:var(--c1)}
-.send-info{flex:1;min-width:0}
-.send-name{font-size:12px;font-weight:600}
-.send-email-txt{font-size:11px;color:var(--tx2)}
-.send-st{font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0}
-.st-wait{color:var(--tx3)}
-.st-gen{color:var(--c1)}
-.st-ready{color:var(--a1)}
-.st-sent{color:var(--g1)}
-.st-fail{color:var(--r1)}
-.email-preview{background:var(--bg4);border:1px solid var(--b1);border-radius:var(--rd);padding:10px}
-.preview-field{margin-bottom:8px}
-.preview-field:last-child{margin-bottom:0}
+/* CAMPAIGN ROWS */
+.camp-row{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rd);margin-bottom:6px;cursor:pointer;transition:background .1s}
+.camp-row:hover{background:var(--bg4)}
+.camp-row.expanded{background:var(--bg4);border-color:var(--b2)}
+.camp-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:1px}
+.camp-main{flex:1;min-width:0}
+.camp-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.camp-name{font-size:12px;font-weight:500}
+.camp-email{font-size:11px;color:var(--tx2);margin-top:1px}
+.camp-subj{font-size:11px;color:var(--tx3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px}
+.camp-preview{margin-top:10px;display:none}
+.camp-preview.show{display:block}
+.camp-edit-sub{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd);padding:8px 11px;color:var(--tx);font-size:12px;font-family:'Inter',sans-serif;outline:none;margin-bottom:7px}
+.camp-edit-body{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd);padding:10px 11px;color:var(--tx);font-size:12px;font-family:'Inter',sans-serif;outline:none;resize:vertical;min-height:140px;line-height:1.7}
+.camp-edit-actions{display:flex;gap:7px;margin-top:8px}
+.st{font-size:11px;font-weight:600;white-space:nowrap;flex-shrink:0}
+.st-wait{color:var(--tx3)}.st-gen{color:var(--c1)}.st-ready{color:var(--a1)}.st-sent{color:var(--g1)}.st-fail{color:var(--r1)}
 
+/* PROGRESS */
+.prog-wrap{background:var(--bg4);border-radius:20px;height:5px;margin:10px 0;overflow:hidden;display:none}
+.prog-bar{height:100%;background:var(--g1);border-radius:20px;transition:width .3s;width:0%}
+.prog-txt{font-size:11px;color:var(--tx2);min-height:16px;margin-bottom:8px}
+
+/* STATS */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
 .stat{background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rd2);padding:15px}
 .stat-n{font-family:'Syne',sans-serif;font-size:26px;font-weight:800}
 .stat-l{font-size:10px;color:var(--tx3);margin-top:3px;text-transform:uppercase;letter-spacing:.7px}
 
-.setup-card{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rd2);padding:18px;margin-bottom:14px}
-.setup-card-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:8px}
-.setup-card-sub{font-size:12px;color:var(--tx2);margin-bottom:14px;line-height:1.6}
-.step-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--b1)}
-.step-num{width:22px;height:22px;background:var(--c1l);border:1px solid var(--c1b);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--c1);flex-shrink:0;margin-top:1px}
-.step-txt{font-size:12px;color:var(--tx2);line-height:1.6}
-.step-txt a{color:var(--c1);text-decoration:none}
-.connected-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--g1l);border:1px solid rgba(0,212,170,.2);border-radius:20px;font-size:11px;color:var(--g1);font-weight:500;margin-left:8px}
-.info-box{background:var(--c1l);border:1px solid var(--c1b);border-radius:var(--rd);padding:10px 13px;font-size:12px;color:var(--c1);margin-bottom:14px;display:flex;gap:8px;align-items:flex-start;line-height:1.6}
-.prog-wrap{background:var(--bg4);border-radius:20px;height:6px;margin:10px 0;overflow:hidden}
-.prog-bar{height:100%;background:var(--g1);border-radius:20px;transition:width .3s}
+/* ACTIVITY */
+.act-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg3);border:1px solid var(--b1);border-radius:var(--rd);margin-bottom:5px}
 
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
+/* MODAL */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:none;align-items:center;justify-content:center}
+.overlay.open{display:flex}
 .modal{background:var(--bg2);border:1px solid var(--b2);border-radius:var(--rd3);padding:22px;width:380px;max-width:94vw}
 .modal-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:15px}
+.modal-foot{display:flex;gap:8px;margin-top:13px}
+
+/* MISC */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-thumb{background:var(--b2);border-radius:4px}
 .empty{text-align:center;padding:40px 20px;color:var(--tx3)}
-.pre-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:3px 9px;border-radius:20px;background:var(--g1l);color:var(--g1);border:1px solid rgba(0,212,170,.2);margin-bottom:12px}
+.empty-ico{font-size:32px;margin-bottom:8px}
+code{font-size:11px;background:var(--bg4);padding:2px 7px;border-radius:4px;color:var(--g1);font-family:monospace}
+.div{height:1px;background:var(--b1);margin:14px 0}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
   <div class="brand">
     <div class="brand-logo">🎯</div>
     <div class="brand-name">Aman <span>Sales AI</span></div>
   </div>
-  <div class="topbar-pills">
-    <span class="pill pill-g" id="aiStatus">● AI Connecting...</span>
-    <span class="pill pill-b">Puter.js Powered</span>
+  <div class="topbar-right">
+    <span class="pill pill-g">● Puter.js</span>
+    <span class="pill pill-b">No API Key Needed</span>
   </div>
 </div>
 
 <div class="app">
+
+  <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sb-head">
-      <div class="sb-label">Leads</div>
+      <div class="sb-lbl">Leads</div>
       <button class="add-btn" onclick="openModal()">+ Add Lead</button>
     </div>
     <div class="sb-list" id="leadsList"></div>
   </div>
 
+  <!-- MAIN -->
   <div class="main">
     <div class="tabs">
-      <div class="tab on" id="tab-setup"    onclick="sw('setup')">⚙️ Setup</div>
-      <div class="tab"   id="tab-upload"   onclick="sw('upload')">📂 Upload</div>
-      <div class="tab"   id="tab-campaign" onclick="sw('campaign')">🚀 Campaign</div>
-      <div class="tab"   id="tab-compose"  onclick="sw('compose')">✉️ Compose</div>
-      <div class="tab"   id="tab-reply"    onclick="sw('reply')">↩️ Reply</div>
-      <div class="tab"   id="tab-dash"     onclick="sw('dash')">📊 Dashboard</div>
+      <div class="tab on" id="tab-upload"   onclick="sw('upload')">📂 Upload & Extract</div>
+      <div class="tab"    id="tab-campaign" onclick="sw('campaign')">🚀 Bulk Campaign</div>
+      <div class="tab"    id="tab-compose"  onclick="sw('compose')">✉️ Compose</div>
+      <div class="tab"    id="tab-reply"    onclick="sw('reply')">↩️ Reply</div>
+      <div class="tab"    id="tab-dash"     onclick="sw('dash')">📊 Dashboard</div>
     </div>
 
     <div class="scroll">
 
-      <!-- ══ SETUP ══ -->
-      <div class="pane on" id="pane-setup">
-        <div class="info-box">
-          ℹ️ <div>Complete <strong>3 simple steps</strong> to start sending emails for free using Puter and Google Apps Script.</div>
-        </div>
-
-        <div class="setup-card">
-          <div class="setup-card-title">
-            🤖 Step 1 — Puter.js AI Status
-            <span id="puter-badge" style="display:none" class="connected-badge">✓ Active</span>
-          </div>
-          <div class="setup-card-sub">Puter.js provides free built-in AI. No API keys required.</div>
-          <div id="puter-login-msg" class="step-txt">Initializing Puter environment...</div>
-        </div>
-
-        <div class="setup-card">
-          <div class="setup-card-title">
-            📧 Step 2 — Google Apps Script (Email Delivery)
-            <span id="gas-badge" style="display:none" class="connected-badge">✓ Connected</span>
-          </div>
-          <div class="setup-card-sub">Emails will be sent from your Gmail via Google Apps Script.</div>
-          <div class="step-row"><div class="step-num">1</div><div class="step-txt">Go to <a href="https://script.google.com" target="_blank"><strong>script.google.com</strong></a> → "New Project"</div></div>
-          <div class="step-row"><div class="step-num">2</div><div class="step-txt">Delete existing code, <strong>paste the code below</strong> → Save (Ctrl+S)</div></div>
-          <div class="step-row"><div class="step-num">3</div><div class="step-txt"><strong>Deploy → New Deployment</strong> → Type: <em>Web App</em> → Who has access: <em>Anyone</em> → Deploy → Copy URL</div></div>
-
-          <div style="background:var(--bg4);border:1px solid var(--b2);border-radius:var(--rd);padding:12px;margin:12px 0">
-            <pre id="gasCode" style="font-size:11px;color:var(--g1);line-height:1.7;overflow-x:auto;white-space:pre-wrap">function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    MailApp.sendEmail({
-      to: data.to,
-      name: data.name || "",
-      subject: data.subject,
-      body: data.body
-    });
-    return ContentService.createTextOutput(JSON.stringify({success:true})).setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService.createTextOutput(JSON.stringify({success:false,error:err.toString()})).setMimeType(ContentService.MimeType.JSON);
-  }
-}</pre>
-            <button class="btn-sm" onclick="copyGasCode()" style="margin-top:8px">📋 Copy Code</button>
-          </div>
-
-          <div class="field">
-            <span class="lbl">Google Apps Script Web App URL</span>
-            <input class="inp" id="gas-url" placeholder="https://script.google.com/macros/s/AKfyc.../exec" />
-          </div>
-          <div class="g2">
-            <button class="btn-pri" onclick="saveGAS()" style="margin-bottom:0">💾 Save & Connect</button>
-            <button class="btn-ghost" onclick="testEmail()">📨 Send Test Email</button>
-          </div>
-        </div>
-
-        <div class="setup-card">
-          <div class="setup-card-title">👤 Step 3 — Sender Details (Signature)</div>
-          <div class="g2">
-            <div class="field"><span class="lbl">Your Name</span><input class="inp" id="s-sname" placeholder="Aman Sharma" /></div>
-            <div class="field"><span class="lbl">Designation</span><input class="inp" id="s-desig" placeholder="Sales Manager" /></div>
-          </div>
-          <div class="g2">
-            <div class="field"><span class="lbl">Company</span><input class="inp" id="s-comp" placeholder="Aman EduTech" /></div>
-            <div class="field"><span class="lbl">Phone</span><input class="inp" id="s-phone" placeholder="+91 98XXX XXXX" /></div>
-          </div>
-          <button class="btn-pri" style="margin-bottom:0" onclick="saveSender()">💾 Save Details</button>
-        </div>
-      </div>
-
       <!-- ══ UPLOAD ══ -->
-      <div class="pane" id="pane-upload">
-        <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="pane on" id="pane-upload">
+        <div class="info-box">📂 CSV ya Excel upload karo → AI automatically leads extract karega with name, company, email, role.</div>
+        <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileInput').click()" ondragover="onDrag(event,true)" ondragleave="onDrag(event,false)" ondrop="onDrop(event)">
           <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" onchange="handleFile(event)">
-          <div class="upload-icon">📁</div>
-          <div class="upload-title">Drop CSV/Excel here or click to browse</div>
+          <div style="font-size:36px;margin-bottom:10px">📁</div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:5px">Drop file here or click to browse</div>
+          <div style="font-size:12px;color:var(--tx2)">CSV or Excel — any format with names, emails, companies</div>
         </div>
 
-        <div id="uploadPreview" style="display:none;margin-top:16px">
-          <div class="pre-pill" id="fileNameBadge">✓ file loaded</div>
-          <div class="field">
-            <span class="lbl">Target Course / Product</span>
-            <input class="inp" id="u-course" placeholder="e.g. Articulate Storyline Masterclass" />
+        <div id="uploadReady" style="display:none;margin-top:16px">
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;padding:3px 10px;background:var(--g1l);border:1px solid var(--g1b);border-radius:20px;color:var(--g1);margin-bottom:12px" id="fileBadge">✓ file.csv</div>
+          <div class="field"><span class="lbl">Your Course / Product</span>
+            <input class="inp" id="u-course" placeholder="e.g. POSH Training, Corporate Compliance, Leadership Program" />
           </div>
-          <button class="btn-pri" id="extractBtn" onclick="extractLeads()">🤖 AI Extract Relevant Leads</button>
+          <div class="field"><span class="lbl">Target Audience (optional)</span>
+            <input class="inp" id="u-audience" placeholder="e.g. L&D Manager, HR Head, Training Coordinator" />
+          </div>
+          <button class="btn btn-blue" id="extractBtn" onclick="extractLeads()">🤖 AI Extract Leads</button>
         </div>
 
         <div id="extractedSection" style="display:none;margin-top:18px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div style="font-size:13px;font-weight:600" id="extractCount"></div>
+            <div style="display:flex;gap:8px">
+              <button class="btn-sm" style="background:var(--g1l);border-color:var(--g1b);color:var(--g1)" onclick="addAllToCampaign()">+ Add All to Campaign</button>
+              <button class="btn-sm" onclick="clearExtracted()">Clear</button>
+            </div>
+          </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>Role</th><th>AI Reason</th><th>Action</th></tr></thead>
-              <tbody id="extractedTbody"></tbody>
+              <thead><tr><th>#</th><th>Name</th><th>Company</th><th>Email</th><th>Role</th><th>Why Relevant</th><th></th></tr></thead>
+              <tbody id="extractedBody"></tbody>
             </table>
           </div>
-          <button class="btn-amber" onclick="addAllToCampaign()" style="margin-top:10px">+ Add All to Campaign</button>
         </div>
       </div>
 
       <!-- ══ CAMPAIGN ══ -->
       <div class="pane" id="pane-campaign">
-        <div id="camp-empty" class="empty">No leads in campaign yet.<br><span style="font-size:11px;color:var(--tx3)">Upload leads aur Add to Campaign karo.</span></div>
-        <div id="camp-content" style="display:none">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-            <div id="camp-count" style="font-size:12px;color:var(--tx2)">0 leads</div>
-            <div style="display:flex;gap:8px">
-              <button class="btn-amber" onclick="genAllEmails()" id="genAllBtn">⚡ Generate All Emails</button>
-              <button class="btn-green" onclick="sendAllEmails()" id="sendAllBtn" disabled style="width:auto;padding:8px 16px">📨 Send All</button>
+        <div class="empty" id="campEmpty">
+          <div class="empty-ico">🚀</div>
+          <div>No leads yet.<br>Upload a file → Extract → Add All to Campaign.</div>
+        </div>
+        <div id="campContent" style="display:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+            <div>
+              <div style="font-size:14px;font-weight:600" id="campCount">0 leads</div>
+              <div style="font-size:11px;color:var(--tx2);margin-top:2px">Click any lead to view & edit email → then Send All</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn-sm" style="background:var(--a1l);border-color:rgba(245,158,11,.3);color:var(--a1);padding:7px 14px" onclick="genAllEmails()" id="genAllBtn">⚡ Generate All Emails</button>
+              <button class="btn btn-green" onclick="sendAllEmails()" id="sendAllBtn" disabled style="padding:8px 18px;width:auto">📨 Send All</button>
+              <button class="btn-sm" onclick="clearCampaign()">Clear</button>
             </div>
           </div>
-          <div class="prog-wrap" id="progWrap" style="display:none"><div class="prog-bar" id="progBar" style="width:0%"></div></div>
+          <div class="field"><span class="lbl">Course for this Campaign</span>
+            <input class="inp" id="c-course" placeholder="e.g. POSH Training, Leadership Development" />
+          </div>
+          <div class="prog-wrap" id="progWrap"><div class="prog-bar" id="progBar"></div></div>
+          <div class="prog-txt" id="progTxt"></div>
           <div id="campList"></div>
         </div>
       </div>
 
       <!-- ══ COMPOSE ══ -->
       <div class="pane" id="pane-compose">
-        <div class="g2" style="margin-bottom:10px">
-          <input class="inp" id="co-name" placeholder="Prospect Name" />
-          <input class="inp" id="co-email" placeholder="Email Address" />
+        <div class="field"><span class="lbl">Prospect Details</span>
+          <div class="g2" style="margin-bottom:9px">
+            <input class="inp" id="co-name"  placeholder="Full name" />
+            <input class="inp" id="co-org"   placeholder="Organization" />
+          </div>
+          <div class="g2">
+            <input class="inp" id="co-email" placeholder="Email address" />
+            <input class="inp" id="co-role"  placeholder="Role / Designation" />
+          </div>
         </div>
-        <div class="field">
-          <span class="lbl">Course / Product</span>
-          <input class="inp" id="co-course" placeholder="e.g. Digital Marketing Masterclass" />
+        <div class="field"><span class="lbl">Course / Product</span>
+          <input class="inp" id="co-course" placeholder="e.g. POSH Compliance Training" />
         </div>
-        <button class="btn-pri" id="composeBtn" onclick="composeGenerate()">⚡ Generate Email</button>
+        <div class="field"><span class="lbl">Tone</span>
+          <div class="chips">
+            <span class="chip on tone-c" onclick="setTone(this,'professional')">Professional</span>
+            <span class="chip tone-c"    onclick="setTone(this,'consultative')">Consultative</span>
+            <span class="chip tone-c"    onclick="setTone(this,'friendly')">Friendly</span>
+            <span class="chip tone-c"    onclick="setTone(this,'urgent')">Urgent</span>
+            <span class="chip tone-c"    onclick="setTone(this,'formal')">Formal</span>
+          </div>
+        </div>
+        <div class="field"><span class="lbl">Extra Context (optional)</span>
+          <textarea class="inp" id="co-ctx" rows="2" placeholder="Any personalization details..."></textarea>
+        </div>
+        <button class="btn btn-blue" id="co-genBtn" onclick="composeGen()">⚡ Generate Email</button>
 
-        <div class="outbox" id="co-out">
-          <div class="out-hd">
-            <div class="out-lbl">✉️ Generated Email</div>
-            <span class="out-badge">Edit karke bhejo</span>
+        <!-- EDITABLE EMAIL CARD -->
+        <div class="email-card" id="co-card">
+          <div class="email-card-head">
+            <div class="email-card-title">
+              <span id="co-dots" class="dots" style="display:none"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+              <span id="co-card-title">✦ Generated Email — Edit freely before sending</span>
+            </div>
+            <div class="email-card-actions">
+              <button class="btn-sm" onclick="regenCompose()">↺ Regenerate</button>
+              <button class="btn-sm" onclick="copyEmailCard('co-subj-inp','co-body-ta')">📋 Copy</button>
+            </div>
           </div>
-          <div class="field">
-            <span class="lbl">Subject</span>
-            <input class="inp" id="co-subject" placeholder="Subject yahan aayega..." />
+          <div class="email-subject-row">
+            <span class="email-subject-label">Subject</span>
+            <input class="email-subject-inp" id="co-subj-inp" placeholder="Subject line..." />
           </div>
-          <div class="field">
-            <span class="lbl">Body</span>
-            <textarea class="inp" id="co-body" style="min-height:220px;line-height:1.75" placeholder="Email body yahan aayegi..."></textarea>
+          <textarea class="email-body-area" id="co-body-ta" placeholder="Email body will appear here — you can edit it..." oninput="updateWordCount('co-body-ta','co-wc')"></textarea>
+          <div class="email-footer">
+            <span class="email-word-count" id="co-wc">0 words</span>
+            <div class="email-send-row">
+              <button class="btn-sm" onclick="clearCompose()" style="color:var(--r1);border-color:rgba(239,68,68,.2)">✕ Clear</button>
+              <button class="btn btn-green" onclick="composeSend()" style="padding:7px 18px;width:auto;font-size:12px">📨 Send Email</button>
+            </div>
           </div>
-          <button class="btn-green" onclick="composeSend()" id="co-sendBtn" disabled>📨 Send Now</button>
         </div>
       </div>
 
       <!-- ══ REPLY ══ -->
       <div class="pane" id="pane-reply">
-        <div class="field">
-          <span class="lbl">Client Ka Email Paste Karo</span>
-          <textarea class="inp" id="r-in" style="min-height:110px" placeholder="Client ki email yahan paste karo..."></textarea>
+        <div class="field"><span class="lbl">Incoming Email (paste karo)</span>
+          <textarea class="inp" id="r-in" rows="5" placeholder="Client ka reply yahan paste karo..."></textarea>
         </div>
-        <button class="btn-pri" id="replyBtn" onclick="replyGenerate()">↩️ Generate Reply</button>
+        <div class="field">
+          <div class="g2">
+            <div><span class="lbl">Client Name</span><input class="inp" id="r-name" placeholder="Client name" /></div>
+            <div><span class="lbl">Client Email</span><input class="inp" id="r-email" placeholder="email@company.com" /></div>
+          </div>
+        </div>
+        <div class="field"><span class="lbl">Reply Strategy</span>
+          <div class="chips">
+            <span class="chip on strat-c" onclick="setStrat(this,'follow-up')">Follow Up</span>
+            <span class="chip strat-c"    onclick="setStrat(this,'handle-objection')">Handle Objection</span>
+            <span class="chip strat-c"    onclick="setStrat(this,'price-negotiation')">Price Negotiation</span>
+            <span class="chip strat-c"    onclick="setStrat(this,'close-deal')">Close Deal</span>
+            <span class="chip strat-c"    onclick="setStrat(this,'re-engage')">Re-engage</span>
+            <span class="chip strat-c"    onclick="setStrat(this,'upsell')">Upsell</span>
+          </div>
+        </div>
+        <div class="field"><span class="lbl">Your Constraints (optional)</span>
+          <textarea class="inp" id="r-cons" rows="2" placeholder="e.g. Max 10% discount, delivery 30 days..."></textarea>
+        </div>
+        <button class="btn btn-blue" id="r-genBtn" onclick="replyGen()">↩️ Generate Reply</button>
 
-        <div class="outbox" id="r-out">
-          <div class="out-hd">
-            <div class="out-lbl">↩️ Generated Reply</div>
-            <span class="out-badge">Edit karke bhejo</span>
+        <!-- EDITABLE REPLY CARD -->
+        <div class="email-card" id="r-card">
+          <div class="email-card-head">
+            <div class="email-card-title">
+              <span id="r-dots" class="dots" style="display:none"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
+              <span id="r-card-title">✦ Generated Reply — Edit freely before sending</span>
+            </div>
+            <div class="email-card-actions">
+              <button class="btn-sm" onclick="regenReply()">↺ Regenerate</button>
+              <button class="btn-sm" onclick="copyEmailCard('r-subj-inp','r-body-ta')">📋 Copy</button>
+            </div>
           </div>
-          <div class="field">
-            <span class="lbl">Subject</span>
-            <input class="inp" id="r-subject" placeholder="Reply subject yahan aayega..." />
+          <div class="email-subject-row">
+            <span class="email-subject-label">Subject</span>
+            <input class="email-subject-inp" id="r-subj-inp" placeholder="Subject line..." />
           </div>
-          <div class="field">
-            <span class="lbl">Body</span>
-            <textarea class="inp" id="r-body" style="min-height:220px;line-height:1.75" placeholder="Reply body yahan aayegi..."></textarea>
+          <textarea class="email-body-area" id="r-body-ta" placeholder="Reply body will appear here — you can edit it..." oninput="updateWordCount('r-body-ta','r-wc')"></textarea>
+          <div class="email-footer">
+            <span class="email-word-count" id="r-wc">0 words</span>
+            <div class="email-send-row">
+              <button class="btn-sm" onclick="clearReply()" style="color:var(--r1);border-color:rgba(239,68,68,.2)">✕ Clear</button>
+              <button class="btn btn-green" onclick="replySend()" style="padding:7px 18px;width:auto;font-size:12px">📨 Send Reply</button>
+            </div>
           </div>
-          <div class="field">
-            <span class="lbl">Send To (Email)</span>
-            <input class="inp" id="r-to" placeholder="client@example.com" />
-          </div>
-          <button class="btn-green" onclick="replySend()" id="r-sendBtn" disabled>📨 Send Reply</button>
         </div>
       </div>
 
@@ -346,430 +394,611 @@ td{padding:9px 12px;border-bottom:1px solid var(--b1);color:var(--tx);vertical-a
       <div class="pane" id="pane-dash">
         <div class="stats">
           <div class="stat"><div class="stat-n" id="ds-leads">0</div><div class="stat-l">Total Leads</div></div>
-          <div class="stat"><div class="stat-n" id="ds-camp">0</div><div class="stat-l">In Campaign</div></div>
+          <div class="stat"><div class="stat-n" id="ds-gen">0</div><div class="stat-l">Generated</div></div>
           <div class="stat"><div class="stat-n" id="ds-sent">0</div><div class="stat-l">Emails Sent</div></div>
           <div class="stat"><div class="stat-n" id="ds-fail">0</div><div class="stat-l">Failed</div></div>
         </div>
+        <div class="lbl" style="margin-bottom:10px">Activity Log</div>
+        <div id="actFeed"><div class="empty"><div class="empty-ico">📋</div><div>No activity yet.</div></div></div>
       </div>
 
+    </div><!-- /scroll -->
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ADD LEAD MODAL -->
+<div class="overlay" id="overlayBg" onclick="closeOut(event)">
+  <div class="modal">
+    <div class="modal-title">Add New Lead</div>
+    <div class="field"><span class="lbl">Full Name</span><input class="inp" id="m-name" placeholder="Rahul Verma" /></div>
+    <div class="field"><span class="lbl">Organization</span><input class="inp" id="m-org" placeholder="Infosys, Delhi University" /></div>
+    <div class="field"><span class="lbl">Email</span><input class="inp" id="m-email" placeholder="email@org.com" /></div>
+    <div class="field"><span class="lbl">Role</span><input class="inp" id="m-role" placeholder="HR Manager, L&D Head" /></div>
+    <div class="field"><span class="lbl">Status</span>
+      <select class="inp" id="m-status" style="cursor:pointer">
+        <option value="new">New Lead</option>
+        <option value="contacted">Contacted</option>
+        <option value="demo">Demo Scheduled</option>
+        <option value="proposal">Proposal Sent</option>
+        <option value="closed">Closed Won</option>
+      </select>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()" style="width:80px">Cancel</button>
+      <button class="btn btn-blue" onclick="addLead()" style="margin-top:0">Add Lead</button>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-bg" id="modalBg">
-  <div class="modal">
-    <div class="modal-title">Add New Lead</div>
-    <div class="field"><input class="inp" id="m-name" placeholder="Name" /></div>
-    <div class="field"><input class="inp" id="m-email" placeholder="Email" /></div>
-    <button class="btn-pri" onclick="addLead()" style="margin-bottom:6px">Add Lead</button>
-    <button class="btn-ghost" onclick="closeModal()">Cancel</button>
-  </div>
-</div>
-
 <script>
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
 //  STATE
-// ═══════════════════════════════════════════════════
-let cfg = { senderName:'', desig:'', company:'', phone:'', gasUrl:'' };
-let leads = [];
+// ════════════════════════════════════════
+let leads = [
+  {id:1,name:'Priya Mehta',org:'Infosys Learning',email:'priya.m@infosys.com',role:'Training Head',status:'contacted'},
+  {id:2,name:'Rahul Verma',org:'Delhi University',email:'r.verma@du.ac.in',role:'Academic Coord.',status:'new'},
+  {id:3,name:'Sarah Johnson',org:'Deloitte India',email:'sarah.j@deloitte.com',role:'L&D Manager',status:'demo'},
+];
+let activeLead = null;
+let nextId = 10;
 let campaign = [];
-let rawData = [];
 let extractedLeads = [];
-let counts = { sent:0, fail:0 };
+let rawData = [];
+let emailTone = 'professional';
+let replyStrat = 'follow-up';
+let acts = [];
+let cnt = {leads:3,gen:0,sent:0,fail:0};
+const COLORS = ['#4f8ef7','#00d4aa','#f59e0b','#a78bfa','#22c55e','#f472b6'];
+const ST_CLR  = {new:'#4f8ef7',contacted:'#00d4aa',demo:'#f59e0b',proposal:'#a78bfa',closed:'#22c55e'};
+const ST_LBL  = {new:'New',contacted:'Contacted',demo:'Demo',proposal:'Proposal',closed:'Closed'};
 
-const $ = id => document.getElementById(id);
-const gv = id => ($(id)?.value || '').trim();
+// ════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════
+const $   = id => document.getElementById(id);
+const gv  = id => ($( id)?.value||'').trim();
+const sv  = (id,v) => { const e=$(id); if(e) e.value=v; };
+const ini = n  => (n||'?').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'?';
+const col = id => COLORS[id % COLORS.length];
 
-// ═══════════════════════════════════════════════════
-//  TAB SWITCHER
-// ═══════════════════════════════════════════════════
 function sw(name) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.pane').forEach(p => p.classList.remove('on'));
-  $('tab-' + name).classList.add('on');
-  $('pane-' + name).classList.add('on');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  $('tab-'+name).classList.add('on');
+  $('pane-'+name).classList.add('on');
+}
+function setTone(el,v)  { document.querySelectorAll('.tone-c').forEach(c=>c.classList.remove('on')); el.classList.add('on'); emailTone=v; }
+function setStrat(el,v) { document.querySelectorAll('.strat-c').forEach(c=>c.classList.remove('on')); el.classList.add('on'); replyStrat=v; }
+
+function updateWordCount(taId,wcId) {
+  const words = gv(taId).split(/\s+/).filter(Boolean).length;
+  $(wcId).textContent = words + ' words';
 }
 
-// ═══════════════════════════════════════════════════
-//  PUTER.JS AI — safely wait for puter to be ready
-// ═══════════════════════════════════════════════════
-async function ai(prompt) {
-  return new Promise((resolve, reject) => {
-    puter.ready().then(async () => {
-      try {
-        const response = await puter.ai.chat(prompt);
-        // puter.ai.chat can return string or object
-        if (typeof response === 'string') resolve(response);
-        else if (response && response.message && response.message.content) resolve(response.message.content);
-        else if (response && response.toString) resolve(response.toString());
-        else resolve(String(response));
-      } catch(err) {
-        reject(new Error('AI Error: ' + err.message));
-      }
-    }).catch(reject);
+function copyEmailCard(subjId,bodyId) {
+  const text = 'Subject: '+gv(subjId)+'\n\n'+gv(bodyId);
+  navigator.clipboard.writeText(text).then(()=>{
+    const btn = event.target;
+    const old = btn.textContent;
+    btn.textContent='✓ Copied!';
+    setTimeout(()=>btn.textContent=old,1500);
   });
 }
 
-// Puter status check
-puter.ready().then(() => {
-  $('aiStatus').textContent = '● Puter AI Ready';
-  $('aiStatus').style.background = 'var(--g1l)';
-  $('aiStatus').style.color = 'var(--g1)';
-  $('puter-badge').style.display = 'inline-flex';
-  $('puter-login-msg').innerHTML = '✅ Puter.js connected. AI features ready to use.';
-}).catch(e => {
-  $('aiStatus').textContent = '● Puter Error';
-  $('aiStatus').style.background = 'var(--r1l)';
-  $('aiStatus').style.color = 'var(--r1)';
-  $('puter-login-msg').textContent = '❌ Puter connection failed: ' + e.message;
-});
-
-// ═══════════════════════════════════════════════════
-//  HELPER: Parse AI subject+body response
-// ═══════════════════════════════════════════════════
-function parseEmailResponse(raw, fallbackSubject) {
-  const subMatch = raw.match(/SUBJECT:\s*(.+)/i);
-  const bodyMatch = raw.match(/BODY:\s*([\s\S]+)/i);
-  return {
-    subject: subMatch ? subMatch[1].trim() : fallbackSubject,
-    body: bodyMatch ? bodyMatch[1].trim() : raw.trim()
-  };
+function log(txt,ico='⚡') {
+  acts.unshift({txt,ico,t:new Date().toLocaleTimeString('en',{hour:'2-digit',minute:'2-digit'})});
+  if(acts.length>50) acts.pop();
+  renderActs();
+}
+function renderActs() {
+  if(!acts.length) return;
+  $('actFeed').innerHTML = acts.map(a=>`
+    <div class="act-item">
+      <span style="font-size:14px">${a.ico}</span>
+      <span style="font-size:12px;flex:1">${a.txt}</span>
+      <span style="font-size:10px;color:var(--tx3)">${a.t}</span>
+    </div>`).join('');
+}
+function refreshDash() {
+  cnt.leads = leads.length;
+  $('ds-leads').textContent = cnt.leads;
+  $('ds-gen').textContent   = cnt.gen;
+  $('ds-sent').textContent  = cnt.sent;
+  $('ds-fail').textContent  = cnt.fail;
 }
 
-function emailPrompt(name, company, course) {
-  return `Write a professional sales email to ${name || 'the prospect'} at ${company || 'their company'} about the "${course}" course/product.
-Return ONLY in this exact format, nothing else:
-SUBJECT: <subject line here>
-BODY:
-<full professional email body here>`;
-}
-
-// ═══════════════════════════════════════════════════
-//  SETUP
-// ═══════════════════════════════════════════════════
-function saveGAS() {
-  const url = gv('gas-url');
-  if (!url.startsWith('https://script.google.com')) { alert('Valid Google Script URL daalo!'); return; }
-  cfg.gasUrl = url;
-  localStorage.setItem('aman_gas_url', url);
-  $('gas-badge').style.display = 'inline-flex';
-  alert('✅ Google Apps Script connected!');
-}
-
-function saveSender() {
-  cfg.senderName = gv('s-sname');
-  cfg.desig = gv('s-desig');
-  cfg.company = gv('s-comp');
-  cfg.phone = gv('s-phone');
-  alert('✅ Sender details saved!');
-}
-
-function copyGasCode() {
-  navigator.clipboard.writeText($('gasCode').textContent).then(() => alert('Code copied!'));
-}
-
-async function testEmail() {
-  const email = prompt('Test ke liye apna email daalo:');
-  if (!email) return;
+// ════════════════════════════════════════
+//  PUTER AI — gemini-1.5-flash via puter.ai
+// ════════════════════════════════════════
+async function ai(prompt) {
   try {
-    await sendMail(email, 'Test User', 'Aman Sales AI — Test Email', 'System working perfectly! ✅');
-    alert('✅ Test email sent! Inbox check karo.');
-  } catch(e) { alert('Error: ' + e.message); }
+    const resp = await puter.ai.chat(prompt, { model: 'gemini-1.5-flash' });
+    return (typeof resp === 'string') ? resp : (resp?.message?.content || resp?.text || JSON.stringify(resp));
+  } catch(e) {
+    throw new Error('AI Error: ' + e.message);
+  }
 }
 
-// ═══════════════════════════════════════════════════
-//  EMAIL SENDER
-// ═══════════════════════════════════════════════════
-async function sendMail(to, name, subject, body) {
-  const url = cfg.gasUrl || localStorage.getItem('aman_gas_url');
-  if (!url) throw new Error('Pehle Google Apps Script URL setup karo (Setup tab)');
-  const sig = cfg.senderName ? `\n\n---\n${cfg.senderName}\n${cfg.desig || ''} | ${cfg.company || ''}${cfg.phone ? '\n' + cfg.phone : ''}` : '';
-  const payload = { to, name: name || '', subject, body: body + sig };
-  await fetch(url, { method:'POST', mode:'no-cors', body: JSON.stringify(payload) });
+function parseEmail(txt) {
+  // Multiple patterns to find subject
+  const subMatch = txt.match(/^SUBJECT:\s*(.+)/im) || txt.match(/^Subject:\s*(.+)/im);
+  const sepIdx   = txt.search(/^---+$/m);
+
+  if(subMatch && sepIdx !== -1) {
+    const subject = subMatch[1].trim();
+    const body    = txt.slice(sepIdx).replace(/^---+\s*/,'').trim();
+    return {subject, body};
+  }
+  if(sepIdx !== -1) {
+    const subject = txt.slice(0, sepIdx).replace(/^SUBJECT:\s*/i,'').trim();
+    const body    = txt.slice(sepIdx).replace(/^---+\s*/,'').trim();
+    return {subject, body};
+  }
+  // Fallback: first line = subject
+  const lines = txt.trim().split('\n');
+  return {subject: lines[0].replace(/^(SUBJECT:|Subject:)\s*/i,'').trim(), body: lines.slice(1).join('\n').trim()};
 }
 
-// ═══════════════════════════════════════════════════
-//  FILE UPLOAD & EXTRACT
-// ═══════════════════════════════════════════════════
-function handleFile(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  $('fileNameBadge').textContent = '✓ ' + file.name;
-  $('uploadPreview').style.display = 'block';
-  if (file.name.endsWith('.csv')) {
-    Papa.parse(file, { header:true, complete: r => { rawData = r.data; }});
+function sigBlock() {
+  const name  = localStorage.getItem('aman_sname') || 'Aman Sharma';
+  const desig = localStorage.getItem('aman_desig') || 'Sales Manager';
+  const comp  = localStorage.getItem('aman_comp')  || 'Aman EduTech';
+  const phone = localStorage.getItem('aman_phone') || '';
+  return `${name}\n${desig} | ${comp}${phone?'\nPh: '+phone:''}`;
+}
+
+// ════════════════════════════════════════
+//  PUTER MAIL — send email
+// ════════════════════════════════════════
+async function sendMail(to, subject, body) {
+  if(!to || !to.includes('@')) throw new Error('Invalid email: ' + to);
+  const full = body + '\n\n---\n' + sigBlock();
+  // puter.mail.send is the standard Puter email API
+  await puter.mail.send({ to, subject, body: full });
+}
+
+// ════════════════════════════════════════
+//  LEADS SIDEBAR
+// ════════════════════════════════════════
+function renderLeads() {
+  $('leadsList').innerHTML = leads.map(l=>`
+    <div class="lead-row${activeLead?.id===l.id?' sel':''}" onclick="pickLead(${l.id})">
+      <div style="display:flex;align-items:center;gap:9px">
+        <div class="av" style="background:${col(l.id)}1a;color:${col(l.id)}">${ini(l.name)}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ln">${l.name}</div>
+          <div class="lo">${l.org||''}</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:5px;margin-top:5px">
+        <div class="sdot" style="background:${ST_CLR[l.status]||'#4f8ef7'}"></div>
+        <div style="font-size:10px;color:var(--tx3)">${ST_LBL[l.status]||l.status}</div>
+      </div>
+    </div>`).join('');
+  refreshDash();
+}
+
+function pickLead(id) {
+  activeLead = leads.find(l=>l.id===id);
+  renderLeads();
+  sv('co-name',activeLead.name); sv('co-org',activeLead.org||'');
+  sv('co-email',activeLead.email||''); sv('co-role',activeLead.role||'');
+  sv('r-name',activeLead.name); sv('r-email',activeLead.email||'');
+}
+
+function openModal()  { $('overlayBg').classList.add('open'); }
+function closeModal() { $('overlayBg').classList.remove('open'); }
+function closeOut(e)  { if(e.target===$('overlayBg')) closeModal(); }
+
+function addLead() {
+  const name = gv('m-name'); if(!name) return;
+  const l = {id:nextId++,name,org:gv('m-org'),email:gv('m-email'),role:gv('m-role'),status:$('m-status').value};
+  leads.push(l); closeModal();
+  ['m-name','m-org','m-email','m-role'].forEach(id=>sv(id,''));
+  log(`Lead added: ${name} — ${l.org}`,'👤'); renderLeads();
+}
+
+// ════════════════════════════════════════
+//  FILE UPLOAD
+// ════════════════════════════════════════
+function onDrag(e,over) { e.preventDefault(); $('dropZone').classList[over?'add':'remove']('drag'); }
+function onDrop(e) { e.preventDefault(); $('dropZone').classList.remove('drag'); processFile(e.dataTransfer.files[0]); }
+function handleFile(e) { processFile(e.target.files[0]); }
+
+function processFile(file) {
+  if(!file) return;
+  $('fileBadge').textContent = '✓ ' + file.name;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(ext==='csv') {
+    Papa.parse(file,{header:true,skipEmptyLines:true,complete:r=>{ rawData=r.data; $('uploadReady').style.display='block'; }});
   } else {
     const reader = new FileReader();
-    reader.onload = ev => {
-      const wb = XLSX.read(ev.target.result, { type:'binary' });
-      rawData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    reader.onload = e => {
+      const wb = XLSX.read(e.target.result,{type:'binary'});
+      rawData = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      $('uploadReady').style.display='block';
     };
     reader.readAsBinaryString(file);
   }
 }
 
 async function extractLeads() {
-  const course = gv('u-course');
-  if (!course) { alert('Course/Product naam daalo!'); return; }
-  const btn = $('extractBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> AI Extracting...';
+  const course   = gv('u-course');
+  const audience = gv('u-audience');
+  if(!course)          { alert('Course naam likho pehle!'); return; }
+  if(!rawData.length)  { alert('Pehle file upload karo.'); return; }
 
-  let validRows = rawData.filter(r => Object.values(r).some(v => String(v).includes('@'))).slice(0, 10);
-  extractedLeads = [];
+  const btn=$('extractBtn');
+  btn.disabled=true; btn.textContent='🔍 Detecting columns...';
 
-  for (let r of validRows) {
-    const rowText = JSON.stringify(r);
-    let reason = '';
-    try { reason = await ai(`In 10 words, why should someone in this role: ${rowText} take a course on ${course}?`); } catch(e) { reason = 'Relevant professional'; }
-    extractedLeads.push({
-      name: r.name || r.Name || r.NAME || 'Prospect',
-      company: r.company || r.Company || r.COMPANY || 'Organization',
-      email: Object.values(r).find(v => String(v).includes('@')),
-      role: r.role || r.Role || r.ROLE || r.designation || r.Designation || 'Professional',
-      reason: reason
-    });
+  // Smart column detection
+  const keys = Object.keys(rawData[0]||{});
+  let emailCol='',nameCol='',companyCol='',roleCol='',notesCol='';
+
+  for(const key of keys) {
+    if(!emailCol && rawData.some(r=>String(r[key]||'').includes('@'))) emailCol=key;
   }
+  for(const key of keys) {
+    const k=key.toLowerCase().replace(/[^a-z]/g,'');
+    if(!nameCol    && ['name','fullname','contactname','person','contact'].includes(k)) nameCol=key;
+    if(!companyCol && ['company','organization','org','firm','business','institute','institution','employer','college','school','university'].includes(k)) companyCol=key;
+    if(!roleCol    && ['designation','role','title','jobtitle','position','department'].includes(k)) roleCol=key;
+    if(!notesCol   && ['notes','note','remarks','comment','description'].includes(k)) notesCol=key;
+  }
+  if(!nameCol    && keys[0]) nameCol=keys[0];
+  if(!companyCol && keys[1]) companyCol=keys[1];
+  if(!emailCol   && keys[2]) emailCol=keys[2];
+  if(!roleCol    && keys[3]) roleCol=keys[3];
+
+  if(!emailCol) {
+    alert('Email column nahi mili!\nFile mein "@" wali emails check karo.');
+    btn.disabled=false; btn.textContent='🤖 AI Extract Leads'; return;
+  }
+
+  const valid = rawData.map(row=>({
+    name:    String(row[nameCol]   ||'').trim(),
+    company: String(row[companyCol]||'').trim(),
+    email:   String(row[emailCol]  ||'').trim(),
+    role:    String(row[roleCol]   ||'').trim(),
+    notes:   String(row[notesCol]  ||'').trim(),
+  })).filter(r=>r.email.includes('@')&&r.email.includes('.'));
+
+  if(!valid.length) {
+    alert('Koi valid email nahi mili!');
+    btn.disabled=false; btn.textContent='🤖 AI Extract Leads'; return;
+  }
+
+  btn.textContent=`✅ ${valid.length} emails mili — AI reasons likh raha hai...`;
+  extractedLeads=[];
+  const BATCH=20;
+
+  for(let i=0;i<valid.length;i+=BATCH) {
+    const batch=valid.slice(i,i+BATCH);
+    btn.textContent=`🤖 Processing ${i+1}–${Math.min(i+BATCH,valid.length)} / ${valid.length}...`;
+    const prompt=`For each person, write 1 short sentence (max 10 words) why they need: "${course}"\n${batch.map((r,j)=>`${j+1}. ${r.name}|${r.role}|${r.company}`).join('\n')}\nReturn ONLY JSON array of strings: ["reason1","reason2"]. No markdown.`;
+    try {
+      const res=await ai(prompt);
+      const s=res.indexOf('['),e2=res.lastIndexOf(']');
+      let reasons=[];
+      if(s!==-1&&e2!==-1){try{reasons=JSON.parse(res.slice(s,e2+1));}catch(_){}}
+      batch.forEach((r,j)=>extractedLeads.push({...r,reason:reasons[j]||`${r.role||'Professional'} needs ${course}`}));
+    } catch(_) {
+      batch.forEach(r=>extractedLeads.push({...r,reason:`${r.role||'Professional'} needs ${course}`}));
+    }
+  }
+
   renderExtracted();
-  btn.disabled = false; btn.innerHTML = '🤖 AI Extract Relevant Leads';
+  log(`${extractedLeads.length} leads extracted`,'🤖');
+  btn.disabled=false; btn.textContent='🤖 AI Extract Leads';
 }
 
 function renderExtracted() {
-  $('extractedSection').style.display = 'block';
-  $('extractedTbody').innerHTML = extractedLeads.map((l, i) => `
+  $('extractedSection').style.display='block';
+  $('extractCount').textContent=`✅ ${extractedLeads.length} leads found`;
+  $('extractedBody').innerHTML=extractedLeads.map((l,i)=>`
     <tr>
-      <td>${l.name}</td><td>${l.company}</td>
-      <td style="color:var(--c1)">${l.email}</td><td>${l.role}</td>
-      <td style="font-size:10px;color:var(--tx2)">${l.reason}</td>
-      <td><button class="btn-sm" onclick="addToCampaign(${i})">Add</button></td>
+      <td style="color:var(--tx3)">${i+1}</td>
+      <td style="font-weight:500">${l.name||'—'}</td>
+      <td>${l.company||'—'}</td>
+      <td style="color:var(--c1);font-size:11px">${l.email}</td>
+      <td style="color:var(--tx2)">${l.role||'—'}</td>
+      <td style="color:var(--tx2);font-size:11px">${l.reason||'—'}</td>
+      <td><button class="btn-sm" onclick="addOneToCampaign(${i})">+</button></td>
     </tr>`).join('');
 }
+function clearExtracted() { extractedLeads=[]; $('extractedSection').style.display='none'; }
 
-function addToCampaign(i) {
-  campaign.push({...extractedLeads[i], status:'ready', subject:'', body:''});
-  updateDashStats();
-  alert('✅ Added to campaign!');
-  sw('campaign'); renderCampaign();
+function addOneToCampaign(i) {
+  const l=extractedLeads[i]; if(!l) return;
+  if(campaign.find(c=>c.email===l.email)){alert('Already in campaign.');return;}
+  campaign.push({id:nextId++,...l,status:'wait',subject:'',body:''});
+  renderCampaign(); log(`Added ${l.name||l.email} to campaign`,'➕'); sw('campaign');
 }
-
 function addAllToCampaign() {
-  campaign = [...campaign, ...extractedLeads.map(l => ({...l, status:'ready', subject:'', body:''}))];
-  updateDashStats();
-  sw('campaign'); renderCampaign();
+  let added=0;
+  extractedLeads.forEach(l=>{
+    if(l.email&&!campaign.find(c=>c.email===l.email)){
+      campaign.push({id:nextId++,...l,status:'wait',subject:'',body:''});added++;
+    }
+  });
+  renderCampaign(); log(`${added} leads added to campaign`,'🚀'); sw('campaign');
 }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
 //  CAMPAIGN
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
 function renderCampaign() {
-  $('camp-empty').style.display = campaign.length ? 'none' : 'block';
-  $('camp-content').style.display = campaign.length ? 'block' : 'none';
-  $('camp-count').textContent = `${campaign.length} leads in campaign`;
-  $('sendAllBtn').disabled = !campaign.length;
+  const has = campaign.length>0;
+  $('campEmpty').style.display   = has?'none':'block';
+  $('campContent').style.display = has?'block':'none';
+  if(!has) return;
+  $('campCount').textContent = `${campaign.length} leads in campaign`;
+  const allReady = campaign.every(c=>['ready','sent','fail'].includes(c.status));
+  $('sendAllBtn').disabled = !allReady;
 
-  $('campList').innerHTML = campaign.map((l, i) => {
-    const hasPreview = l.subject || l.body;
+  $('campList').innerHTML = campaign.map(l=>{
+    const sico={wait:'⏳',gen:'🤖',ready:'✅',sent:'✉️',fail:'❌'}[l.status]||'⏳';
+    const scls={wait:'st-wait',gen:'st-gen',ready:'st-ready',sent:'st-sent',fail:'st-fail'}[l.status]||'st-wait';
+    const stxt={wait:'Waiting',gen:'Generating...',ready:'Ready to Send',sent:'Sent ✓',fail:'Failed'}[l.status];
+    const hasEmail = l.subject && l.body;
     return `
-    <div class="send-row">
-      <div class="send-row-top ${hasPreview ? 'has-preview' : ''}">
-        <div class="send-av">${(l.name||'?')[0].toUpperCase()}</div>
-        <div class="send-info">
-          <div class="send-name">${l.name}</div>
-          <div class="send-email-txt">${l.email}</div>
+    <div class="camp-row" id="crow-${l.id}" onclick="toggleExpand(${l.id})">
+      <div class="camp-av" style="background:${col(l.id)}1a;color:${col(l.id)}">${ini(l.name||l.email)}</div>
+      <div class="camp-main">
+        <div class="camp-top">
+          <div>
+            <div class="camp-name">${l.name||'—'} <span style="font-size:11px;color:var(--tx2);font-weight:400">${l.company||''}</span></div>
+            <div class="camp-email">${l.email}</div>
+            ${l.subject?`<div class="camp-subj">📧 ${l.subject}</div>`:''}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="st ${scls}">${sico} ${stxt}</span>
+            <button class="btn-sm" onclick="event.stopPropagation();removeCamp(${l.id})">✕</button>
+          </div>
         </div>
-        <div class="send-st ${l.status==='sent'?'st-sent':l.status==='gen'?'st-gen':'st-ready'}">
-          ${l.status==='sent'?'✓ Sent':l.status==='gen'?'Generating...':'Ready'}
+
+        <!-- EXPANDABLE EMAIL EDITOR -->
+        <div class="camp-preview" id="cprev-${l.id}">
+          <div style="height:8px"></div>
+          <div class="lbl">Subject</div>
+          <input class="camp-edit-sub" id="csub-${l.id}" value="${(l.subject||'').replace(/"/g,'&quot;')}" placeholder="Subject line..." onclick="event.stopPropagation()" oninput="updateCampData(${l.id})" />
+          <div class="lbl" style="margin-top:8px">Email Body</div>
+          <textarea class="camp-edit-body" id="cbdy-${l.id}" onclick="event.stopPropagation()" oninput="updateCampData(${l.id})">${l.body||''}</textarea>
+          <div class="camp-edit-actions" onclick="event.stopPropagation()">
+            <button class="btn-sm" onclick="sendOneCamp(${l.id})">📨 Send This Email</button>
+            <button class="btn-sm" onclick="regenOneCamp(${l.id})" style="color:var(--a1);border-color:rgba(245,158,11,.25)">↺ Regenerate</button>
+          </div>
         </div>
       </div>
-      ${hasPreview ? `
-      <div class="email-preview">
-        <div class="preview-field">
-          <span class="lbl" style="font-size:9px">Subject</span>
-          <input class="inp" style="padding:6px 9px;font-size:12px" value="${(l.subject||'').replace(/"/g,'&quot;')}" oninput="campaign[${i}].subject=this.value" />
-        </div>
-        <div class="preview-field">
-          <span class="lbl" style="font-size:9px">Body</span>
-          <textarea class="inp" style="min-height:100px;font-size:11px;line-height:1.65" oninput="campaign[${i}].body=this.value">${l.body||''}</textarea>
-        </div>
-      </div>` : ''}
     </div>`;
   }).join('');
 }
 
-async function genAllEmails() {
-  const course = gv('u-course');
-  const btn = $('genAllBtn');
-  btn.disabled = true;
-  $('progWrap').style.display = 'block';
-  $('progBar').style.width = '0%';
+function toggleExpand(id) {
+  const prev=$(`cprev-${id}`);
+  const row=$(`crow-${id}`);
+  if(!prev) return;
+  const isOpen=prev.classList.contains('show');
+  // Close all
+  document.querySelectorAll('.camp-preview').forEach(p=>p.classList.remove('show'));
+  document.querySelectorAll('.camp-row').forEach(r=>r.classList.remove('expanded'));
+  if(!isOpen){prev.classList.add('show');row.classList.add('expanded');}
+}
 
-  for (let i = 0; i < campaign.length; i++) {
-    const l = campaign[i];
-    if (l.body) { $('progBar').style.width = `${Math.round(((i+1)/campaign.length)*100)}%`; continue; }
-    l.status = 'gen';
-    renderCampaign();
-    try {
-      const raw = await ai(emailPrompt(l.name, l.company, course || 'our course'));
-      const parsed = parseEmailResponse(raw, `Exciting opportunity for ${l.company}`);
-      l.subject = parsed.subject;
-      l.body = parsed.body;
-      l.status = 'ready';
-    } catch(e) {
-      l.status = 'ready';
-    }
-    $('progBar').style.width = `${Math.round(((i+1)/campaign.length)*100)}%`;
-    renderCampaign();
+function updateCampData(id) {
+  const l=campaign.find(c=>c.id===id); if(!l) return;
+  const sub=$(`csub-${id}`), body=$(`cbdy-${id}`);
+  if(sub) l.subject=sub.value;
+  if(body) l.body=body.value;
+  if(l.status==='wait') l.status='ready';
+  // Update status display
+  const stEl=$(`crow-${id}`)?.querySelector('.st');
+  if(stEl){stEl.className='st st-ready';stEl.textContent='✅ Ready to Send';}
+  $('sendAllBtn').disabled=!campaign.every(c=>['ready','sent','fail'].includes(c.status));
+}
+
+async function sendOneCamp(id) {
+  const l=campaign.find(c=>c.id===id); if(!l) return;
+  const sub=$(`csub-${id}`)?.value||l.subject;
+  const body=$(`cbdy-${id}`)?.value||l.body;
+  if(!sub||!body){alert('Email generate karo pehle!');return;}
+  try {
+    await sendMail(l.email,sub,body);
+    l.status='sent'; cnt.sent++;
+    log(`✅ Sent to ${l.name||l.email}`,'✉️');
+    renderCampaign(); refreshDash();
+    alert('✅ Email sent to '+l.email);
+  } catch(e) {
+    l.status='fail'; cnt.fail++;
+    log(`❌ Failed: ${l.email}`,'❌');
+    renderCampaign(); refreshDash();
+    alert('❌ Failed: '+e.message);
   }
-  btn.disabled = false;
+}
+
+async function regenOneCamp(id) {
+  const l=campaign.find(c=>c.id===id); if(!l) return;
+  const course=gv('c-course')||'our e-learning program';
+  l.status='gen'; renderCampaign();
+  const prompt=`Write a personalized B2B sales email.\nProspect: ${l.name||'Decision Maker'} | ${l.role||''} | ${l.company||''}\nEmail: ${l.email}\nCourse: ${course}\nWhy relevant: ${l.reason||''}\n\nFormat:\nSUBJECT: [subject line]\n---\n[email body]\n\nRules: 150-200 words. Personal opener. Clear value. Soft CTA. Sign as: ${sigBlock()}. No placeholders.`;
+  try {
+    const res=await ai(prompt);
+    const {subject,body}=parseEmail(res);
+    l.subject=subject; l.body=body; l.status='ready'; cnt.gen++;
+  } catch(e){l.status='fail';}
+  renderCampaign(); refreshDash();
+}
+
+function removeCamp(id) { campaign=campaign.filter(c=>c.id!==id); renderCampaign(); }
+function clearCampaign() { if(!confirm('Clear all leads?')) return; campaign=[]; renderCampaign(); }
+
+async function genAllEmails() {
+  if(!campaign.length) return;
+  const course=gv('c-course')||'our e-learning program';
+  const btn=$('genAllBtn');
+  btn.disabled=true; btn.textContent='⏳ Generating...';
+  $('progWrap').style.display='block';
+
+  let done=0;
+  for(const l of campaign) {
+    if(l.status==='sent'){done++;continue;}
+    l.status='gen'; updateCampRowStatus(l);
+    const prompt=`Write a personalized B2B sales email.\nProspect: ${l.name||'Decision Maker'} | ${l.role||''} | ${l.company||''}\nEmail: ${l.email}\nCourse: ${course}\nWhy relevant: ${l.reason||''}\n\nFormat:\nSUBJECT: [subject line]\n---\n[email body]\n\nRules: 150-200 words. Personal opener based on their role. Clear ROI. Soft CTA (15-min call or free demo). Sign as: ${sigBlock()}. No bracket placeholders.`;
+    try {
+      const res=await ai(prompt);
+      const {subject,body}=parseEmail(res);
+      l.subject=subject; l.body=body; l.status='ready'; cnt.gen++;
+    } catch(e){l.status='fail';l.body='Error: '+e.message;}
+    done++; updateCampRowStatus(l);
+    $('progBar').style.width=Math.round(done/campaign.length*100)+'%';
+    $('progTxt').textContent=`Generated ${done} of ${campaign.length} — Click any lead to view & edit`;
+  }
+
+  btn.disabled=false; btn.textContent='⚡ Regenerate All';
+  $('sendAllBtn').disabled=false;
+  $('progTxt').textContent='✅ All emails ready! Click any lead to preview & edit → then Send All';
+  // Re-render to show editable cards
+  renderCampaign();
+  refreshDash();
+}
+
+function updateCampRowStatus(l) {
+  const row=$(`crow-${l.id}`); if(!row) return;
+  const stEl=row.querySelector('.st'); if(!stEl) return;
+  const sico={wait:'⏳',gen:'🤖',ready:'✅',sent:'✉️',fail:'❌'}[l.status]||'⏳';
+  const scls={wait:'st-wait',gen:'st-gen',ready:'st-ready',sent:'st-sent',fail:'st-fail'}[l.status]||'st-wait';
+  const stxt={wait:'Waiting',gen:'Generating...',ready:'Ready to Send',sent:'Sent ✓',fail:'Failed'}[l.status];
+  stEl.className='st '+scls; stEl.textContent=sico+' '+stxt;
 }
 
 async function sendAllEmails() {
-  const btn = $('sendAllBtn');
-  btn.disabled = true;
-  const course = gv('u-course');
+  const ready=campaign.filter(c=>c.status==='ready');
+  if(!ready.length){alert('Koi ready email nahi — pehle Generate All karo.');return;}
+  if(!confirm(`${ready.length} emails bhejni hain. Confirm?`)) return;
 
-  for (let l of campaign) {
-    if (l.status === 'sent') continue;
-    if (!l.body) {
-      l.status = 'gen'; renderCampaign();
-      try {
-        const raw = await ai(emailPrompt(l.name, l.company, course || 'our course'));
-        const parsed = parseEmailResponse(raw, `Opportunity for ${l.company}`);
-        l.subject = parsed.subject; l.body = parsed.body;
-      } catch(e) { l.status = 'fail'; counts.fail++; renderCampaign(); continue; }
-    }
+  const btn=$('sendAllBtn');
+  btn.disabled=true; btn.textContent='📨 Sending...';
+  $('progWrap').style.display='block';
+  let sent=0, fail=0;
+
+  for(const l of ready) {
+    $('progTxt').textContent=`Sending to ${l.email}...`;
+    // Use latest edited subject/body from inputs
+    const sub=$(`csub-${l.id}`)?.value||l.subject;
+    const body=$(`cbdy-${l.id}`)?.value||l.body;
     try {
-      await sendMail(l.email, l.name, l.subject, l.body);
-      l.status = 'sent'; counts.sent++;
+      await sendMail(l.email,sub,body);
+      l.status='sent'; cnt.sent++; sent++;
+      log(`✅ Sent to ${l.name||l.email}`,'✉️');
     } catch(e) {
-      l.status = 'fail'; counts.fail++;
+      l.status='fail'; l.errorMsg=e.message; cnt.fail++; fail++;
+      log(`❌ Failed: ${l.email} — ${e.message}`,'❌');
     }
-    updateDashStats();
-    renderCampaign();
+    updateCampRowStatus(l);
+    $('progBar').style.width=Math.round((sent+fail)/ready.length*100)+'%';
+    $('progTxt').textContent=`✅ Sent: ${sent}  ❌ Failed: ${fail}  ⏳ Left: ${ready.length-sent-fail}`;
+    await new Promise(r=>setTimeout(r,400));
   }
-  alert('✅ Campaign complete!');
-  btn.disabled = false;
+
+  btn.textContent='📨 Send All';
+  $('progTxt').textContent=`Done — ${sent} sent, ${fail} failed`;
+  alert(fail===0?`✅ All ${sent} emails sent!`:`${sent} sent, ${fail} failed. Check Activity Log.`);
+  log(`Campaign done: ${sent} sent, ${fail} failed`,'🎯');
+  refreshDash(); renderCampaign();
 }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
 //  COMPOSE
-// ═══════════════════════════════════════════════════
-async function composeGenerate() {
-  const name = gv('co-name');
-  const course = gv('co-course');
-  const btn = $('composeBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> Generating...';
+// ════════════════════════════════════════
+async function composeGen() {
+  const name=gv('co-name'),org=gv('co-org'),email=gv('co-email'),role=gv('co-role'),course=gv('co-course'),ctx=gv('co-ctx');
+  if(!name||!course){alert('Prospect name aur course zaroori hain.');return;}
+  const btn=$('co-genBtn'); btn.disabled=true;
+  $('co-card').classList.add('show');
+  $('co-dots').style.display='inline-flex';
+  $('co-card-title').style.display='none';
+  sv('co-subj-inp',''); sv('co-body-ta',''); $('co-wc').textContent='0 words';
+
+  const prompt=`Write a personalized B2B sales email.\nProspect: ${name} | ${role||'Decision Maker'} | ${org}\nEmail: ${email}\nCourse: ${course}\nTone: ${emailTone}\nContext: ${ctx||'none'}\n\nFormat:\nSUBJECT: [subject line]\n---\n[email body]\n\nRules: 160-200 words. Personalized opener. Clear value proposition. Soft CTA. Sign as: ${sigBlock()}. No bracket placeholders.`;
 
   try {
-    const raw = await ai(emailPrompt(name, '', course || 'our course'));
-    const parsed = parseEmailResponse(raw, `Opportunity: ${course}`);
-    $('co-out').classList.add('show');
-    $('co-subject').value = parsed.subject;
-    $('co-body').value = parsed.body;
-    $('co-sendBtn').disabled = false;
-  } catch(e) {
-    alert('AI Error: ' + e.message);
-  }
-  btn.disabled = false; btn.innerHTML = '⚡ Generate Email';
+    const res=await ai(prompt);
+    const {subject,body}=parseEmail(res);
+    sv('co-subj-inp',subject);
+    sv('co-body-ta',body);
+    updateWordCount('co-body-ta','co-wc');
+    cnt.gen++;
+    log(`Email generated for ${name}`,'⚡');
+  } catch(e){sv('co-body-ta','Error: '+e.message);}
+  $('co-dots').style.display='none';
+  $('co-card-title').style.display='inline';
+  btn.disabled=false; refreshDash();
 }
-
+async function regenCompose() {
+  if(!gv('co-name')||!gv('co-course')) return;
+  await composeGen();
+}
+function clearCompose() {
+  sv('co-subj-inp',''); sv('co-body-ta',''); $('co-wc').textContent='0 words';
+  $('co-card').classList.remove('show');
+}
 async function composeSend() {
-  const email = gv('co-email');
-  const name  = gv('co-name');
-  const subject = gv('co-subject');
-  const body  = $('co-body').value.trim();
-  if (!email) { alert('Email address daalo!'); return; }
-  if (!subject || !body) { alert('Subject aur body required hai!'); return; }
+  const email=gv('co-email'),subject=gv('co-subj-inp'),body=gv('co-body-ta');
+  if(!email){alert('Email address daalo.');return;}
+  if(!subject||!body){alert('Pehle email generate karo.');return;}
   try {
-    await sendMail(email, name, subject, body);
-    counts.sent++; updateDashStats();
-    alert('✅ Email sent successfully!');
-  } catch(e) { alert('Error: ' + e.message); }
+    await sendMail(email,subject,body);
+    cnt.sent++; log(`Email sent to ${gv('co-name')||email}`,'✉️');
+    alert('✅ Email sent!'); refreshDash();
+  } catch(e){cnt.fail++;alert('❌ Failed: '+e.message);refreshDash();}
 }
 
-// ═══════════════════════════════════════════════════
+// ════════════════════════════════════════
 //  REPLY
-// ═══════════════════════════════════════════════════
-async function replyGenerate() {
-  const inEmail = gv('r-in');
-  if (!inEmail) { alert('Client ki email paste karo!'); return; }
-  const btn = $('replyBtn');
-  btn.disabled = true; btn.innerHTML = '<span class="thinking"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span> Generating...';
+// ════════════════════════════════════════
+async function replyGen() {
+  const incoming=gv('r-in'),name=gv('r-name'),cons=gv('r-cons');
+  if(!incoming){alert('Incoming email paste karo.');return;}
+  const btn=$('r-genBtn'); btn.disabled=true;
+  $('r-card').classList.add('show');
+  $('r-dots').style.display='inline-flex';
+  $('r-card-title').style.display='none';
+  sv('r-subj-inp',''); sv('r-body-ta',''); $('r-wc').textContent='0 words';
+
+  const prompt=`Write the ideal sales reply to this email.\nClient: ${name||'Client'}\nIncoming email: "${incoming}"\nStrategy: ${replyStrat.replace(/-/g,' ')}\nConstraints: ${cons||'standard terms'}\n\nFormat:\nSUBJECT: [Re: subject line]\n---\n[reply body]\n\nRules: 140-180 words. Address their exact concern. Empathetic but confident. Clear next step. Sign as: ${sigBlock()}. No placeholders.`;
 
   try {
-    const prompt = `Draft a helpful professional reply to this customer email:
-"${inEmail}"
-
-Return ONLY in this exact format, nothing else:
-SUBJECT: <reply subject here>
-BODY:
-<full professional reply body here>`;
-
-    const raw = await ai(prompt);
-    const parsed = parseEmailResponse(raw, 'Re: Your Inquiry');
-    $('r-out').classList.add('show');
-    $('r-subject').value = parsed.subject;
-    $('r-body').value = parsed.body;
-    $('r-sendBtn').disabled = false;
-  } catch(e) {
-    alert('AI Error: ' + e.message);
-  }
-  btn.disabled = false; btn.innerHTML = '↩️ Generate Reply';
+    const res=await ai(prompt);
+    const {subject,body}=parseEmail(res);
+    sv('r-subj-inp',subject);
+    sv('r-body-ta',body);
+    updateWordCount('r-body-ta','r-wc');
+    cnt.gen++; log(`Reply generated for ${name||'client'}`,'↩️');
+  } catch(e){sv('r-body-ta','Error: '+e.message);}
+  $('r-dots').style.display='none';
+  $('r-card-title').style.display='inline';
+  btn.disabled=false; refreshDash();
 }
-
+async function regenReply() { await replyGen(); }
+function clearReply() {
+  sv('r-subj-inp',''); sv('r-body-ta',''); $('r-wc').textContent='0 words';
+  $('r-card').classList.remove('show');
+}
 async function replySend() {
-  const to      = gv('r-to');
-  const subject = gv('r-subject');
-  const body    = $('r-body').value.trim();
-  if (!to) { alert('Client ka email daalo (Send To field)!'); return; }
-  if (!subject || !body) { alert('Subject aur body required hai!'); return; }
+  const email=gv('r-email'),subject=gv('r-subj-inp'),body=gv('r-body-ta');
+  if(!email){alert('Client email address daalo.');return;}
+  if(!subject||!body){alert('Pehle reply generate karo.');return;}
   try {
-    await sendMail(to, '', subject, body);
-    counts.sent++; updateDashStats();
-    alert('✅ Reply sent successfully!');
-  } catch(e) { alert('Error: ' + e.message); }
+    await sendMail(email,subject,body);
+    cnt.sent++; log(`Reply sent to ${gv('r-name')||email}`,'✉️');
+    alert('✅ Reply sent!'); refreshDash();
+  } catch(e){cnt.fail++;alert('❌ Failed: '+e.message);refreshDash();}
 }
 
-// ═══════════════════════════════════════════════════
-//  LEADS & MODAL
-// ═══════════════════════════════════════════════════
-function openModal()  { $('modalBg').classList.add('open'); }
-function closeModal() { $('modalBg').classList.remove('open'); }
-
-function addLead() {
-  const name  = gv('m-name');
-  const email = gv('m-email');
-  if (!name || !email) { alert('Name aur email daalo!'); return; }
-  leads.push({ name, email, status:'new' });
-  closeModal();
-  renderLeads();
-  updateDashStats();
-}
-
-function renderLeads() {
-  $('leadsList').innerHTML = leads.map(l => `
-    <div class="lead-row">
-      <div class="ln">${l.name}</div>
-      <div class="lo">${l.email}</div>
-    </div>`).join('');
-}
-
-function updateDashStats() {
-  $('ds-leads').textContent = leads.length;
-  $('ds-camp').textContent  = campaign.length;
-  $('ds-sent').textContent  = counts.sent;
-  $('ds-fail').textContent  = counts.fail;
-}
-
-// Load saved GAS URL on start
-(function init() {
-  const savedUrl = localStorage.getItem('aman_gas_url');
-  if (savedUrl) {
-    $('gas-url').value = savedUrl;
-    cfg.gasUrl = savedUrl;
-    $('gas-badge').style.display = 'inline-flex';
-  }
-})();
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+renderLeads();
 </script>
 </body>
 </html>
